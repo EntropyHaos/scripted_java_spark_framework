@@ -1,6 +1,8 @@
 #!/bin/bash
 # Help from : http://stackoverflow.com/questions/17232526/how-to-pass-an-array-argument-to-the-bash-script
 
+source $script_dir/set_location_vars.bash
+
 console_display_entity_name_and_file=false
 console_display_entity_atributes_and_its_values=false
 console_display_entity_creators_name=false
@@ -35,6 +37,15 @@ function set_vars(){
     file_extension=".ftl"
     file_name="$(printf "%s" $file_name)"
     file_name="create$file_name$file_extension"
+
+# Define the file path and name.
+    
+    echo $apps_static_template_engine_files
+    
+    file_path_and_name="$(printf "%s" $apps_static_template_engine_files)"
+    file_path_and_name="$file_path_and_name$file_name"
+    
+    echo $file_path_and_name
     
 # Set the Author Variable.    
     let last_element_index=$array_count-1
@@ -52,7 +63,7 @@ function set_vars(){
 
 function add_header_to_ftl_file(){
     #echo "HEADER FOR : $file_name"
-    cat  << EOT > $file_name
+    cat  << EOT > $file_path_and_name
     
 <h2>Create a $entity_name</h2>
     <p id="status"></p>
@@ -106,7 +117,7 @@ function add_entity_atribute_form_field_to_ftl_file(){
         
     #if $console_display_entity_atributes_and_its_values; then printf "\n%s\n" "Entity atributes are:"; display_atribute_specs; fi
 
-    cat  << EOT >> $file_name
+    cat  << EOT >> $file_path_and_name
 
     <div class="form-group">
       <label for="$name_of_atribute_associated_with_field">$label_to_use</label>
@@ -121,7 +132,7 @@ eof
 function add_footer_to_file_with_authors_name(){
     #echo "FOOTER FOR : $file_name"
     
-    cat  << EOT >> $file_name
+    cat  << EOT >> $file_path_and_name
 
     <button type="submit" class="btn btn-default">Submit</button>
   </form>

@@ -7,10 +7,9 @@ export script_dir
 readarray entitys_atributes < $1
 
 bash $script_dir/make_frameworks_dir_structure.bash
+
 bash $script_dir/generate_entity_class_file_n_code_it.bash "${entitys_atributes[@]}"
-
-
-#bash $script_dir/generate_entity_insert_ftl_template.bash "${entitys_atributes[@]}"
+bash $script_dir/generate_entity_insert_ftl_template.bash "${entitys_atributes[@]}"
 
 
 
