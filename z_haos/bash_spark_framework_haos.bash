@@ -125,7 +125,7 @@ function spark_framework_haos_bash(){
 }
 
 function delete_existing(){
-    rm -rf $scripted_framework_output_root_directory
+    rm -rf $scripts_build_dir
 }
 
 function run_diff_test(){
@@ -149,15 +149,18 @@ function delete_created_boilerplate_with_prompt(){
     echo    # move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-        rm -rf $scripted_framework_output_root_directory
+        rm -rf $scripts_build_dir
     fi    
 }
 
 function copy_static_files(){
-    dir_to_copy_from="$framework_support_files_directory/z_static_files_for_copy"
+    dir_to_copy_from="$framework_support_files_directory/z_statics_for_copy"
     dir_to_copy_to="$scripts_build_dir"
-    cp -R dir_to_copy_from/. dir_to_copy_to/
+    cp -R $dir_to_copy_from/. $dir_to_copy_to/
 }
+
+copy_static_files
+delete_created_boilerplate_with_prompt
 #delete_existing
 #spark_framework_haos_bash
 #run_diff_test
