@@ -1,22 +1,10 @@
-: << 'EOC'
-
-script_dir="z_haos"
-export script_dir
-
-readarray entitys_attributes < $1
-
-bash $script_dir/make_frameworks_dir_structure.bash
-
-bash $script_dir/generate_entity_class_file_n_code_it.bash "${entitys_attributes[@]}"
-bash $script_dir/generate_entity_insert_ftl_template.bash "${entitys_attributes[@]}"
-
-
-
-EOC
 
 scripted_framework_output_root_directory="$GOPATH/src"
 NAME_THIS_OUTPUT_DIRECTORY="$scripted_framework_output_root_directory/main/java"
 
+java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/Model"
+
+ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/TemplateEngine"
 
 
 driver_script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -51,15 +39,16 @@ function display_java_class_config_variables(){
 
 function create_files_from_java_class_configs(){
     
-    #source 
+
+    # Create array of config files.
     config_files_arr=($class_configs_dir/*)
-    #printf "There are %s java config files." ${#config_files_arr[@]}
-    #printf "\nJava Class Config Variable Sets\n\n"
-    
+
+    # Create files from each config file.
     for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
         create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
         parse_config_lines_in_file_into_java_class_build_variables
-        
+  
+        # Create Java Class File !! THIS NEEDS TO BE EXPLAINED BETTER!      
         source $support_scripts_dir/generate_basic_java_file_from_vars.bash
         
         add_header_to_java_file
@@ -77,6 +66,25 @@ function create_files_from_java_class_configs(){
         
         add_footer_to_java_file
         
+        # Create Java Model Files.
+        java_class_model_files_directory_and_name_one="$java_class_model_files_directory/Model.java"
+        java_class_model_files_directory_and_name_two="$java_class_model_files_directory/UserTable.java"
+        source $support_scripts_dir/generate_java_model_files_from_vars.bash
+        
+        create_java_model_files
+        
+        # Create FreeMarker templet for Create Form.
+        ftl_files_output_directory_and_file_name="$ftl_file_output_directory/createForm.ftl"
+        source $support_scripts_dir/generate_create_form_ftl_file_from_vars.bash
+        
+        add_header_to_ftl_file
+        
+        for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
+            create_attribute_array_split
+            add_attribute_set_form_field_to_ftl_file
+        done        
+        
+        add_footer_to_ftl_file
         #source $support_scripts_dir/generate_basic_java_file_from_vars.bash
         #display_java_class_config_variables
     done    
@@ -92,6 +100,8 @@ function create_attribute_array_split(){
         atribute_name_upper_case="${attribute_array_split[2]}"
         atribute_name_upper_case="$(tr '[:lower:]' '[:upper:]' <<< ${atribute_name_upper_case:0:1})${atribute_name_upper_case:1}"
 
+        atribute_text_for_label="${attribute_array_split[3]}"
+        atribute_text_for_placeholder="${attribute_array_split[4]}"
 }
 
 function parse_config_lines_in_file_into_java_class_build_variables(){
@@ -101,7 +111,11 @@ function parse_config_lines_in_file_into_java_class_build_variables(){
     end_index_for_class_attributes=$((${#class_configs_lines[@]}-1))
     
     java_package_for_class=$(printf "%s" ${class_configs_lines[0]})
+    
     java_class_name=$(printf "%s" ${class_configs_lines[1]})
+    java_class_name_lower_case=$(printf "%s" ${class_configs_lines[1]})
+    java_class_name_lower_case="$(tr '[:upper:]' '[:lower:]' <<< ${java_class_name_lower_case:0:1})${java_class_name_lower_case:1}"
+    
     
     java_class_file_name=$(printf "%s.java" $java_class_name)
     

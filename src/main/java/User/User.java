@@ -1,6 +1,6 @@
 package User;
     
-public class User{    
+public class User implements Validable{    
     
     private String id;
     private String firstName;
@@ -11,67 +11,67 @@ public class User{
     private String middleName;
     private long zip;
     
-    private String getId() {
+    public String getId() {
         return id;
     }
     
-    private void setId() {
+    public void setId(String id) {
         this.id = id;
     }
     
-    private String getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
     
-    private void setFirstName() {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
     
-    private String getLastName() {
+    public String getLastName() {
         return lastName;
     }
     
-    private void setLastName() {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
     
-    private int getAge() {
+    public int getAge() {
         return age;
     }
     
-    private void setAge() {
+    public void setAge(int age) {
         this.age = age;
     }
     
-    private char getGender() {
+    public char getGender() {
         return gender;
     }
     
-    private void setGender() {
+    public void setGender(char gender) {
         this.gender = gender;
     }
     
-    private String getPhone() {
+    public String getPhone() {
         return phone;
     }
     
-    private void setPhone() {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
     
-    private String getMiddleName() {
+    public String getMiddleName() {
         return middleName;
     }
     
-    private void setMiddleName() {
+    public void setMiddleName(String middleName) {
         this.middleName = middleName;
     }
     
-    private long getZip() {
+    public long getZip() {
         return zip;
     }
     
-    private void setZip() {
+    public void setZip(long zip) {
         this.zip = zip;
     }
     

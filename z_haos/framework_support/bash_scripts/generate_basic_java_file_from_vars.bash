@@ -11,7 +11,7 @@ function add_header_to_java_file(){
 cat  << EOT > $java_files_output_directory_and_file_name
 package $java_package_for_class;
     
-public class $java_class_name{    
+public class $java_class_name implements Validable{    
     
 EOT
 # Do not indent this line above here!
@@ -27,7 +27,7 @@ EOT
 function add_attribute_getter_to_java_file(){
 cat  << EOT >> $java_files_output_directory_and_file_name
     
-    $atribute_protection_var $atribute_type get$atribute_name_upper_case() {
+    public $atribute_type get$atribute_name_upper_case() {
         return $atribute_name;
     }
 EOT
@@ -37,7 +37,7 @@ EOT
 function add_attribute_setter_to_java_file(){
 cat  << EOT >> $java_files_output_directory_and_file_name
     
-    $atribute_protection_var void set$atribute_name_upper_case() {
+    public void set$atribute_name_upper_case($atribute_type $atribute_name) {
         this.$atribute_name = $atribute_name;
     }
 EOT
