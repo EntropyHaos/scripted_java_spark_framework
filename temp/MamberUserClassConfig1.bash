@@ -1,4 +1,5 @@
-MemberUser
+testPackageOne
+TestClass1
 private String memberName "Chocoholic Anonomous Member Name" "Enter name of member."
 private String memberNumber "Chocoholic Anonomous Member ID" "Enter ID number for member."
 private String memberStreetAddress "Chocoholic Anonomous Member Street Address" "Enter street address for member."
