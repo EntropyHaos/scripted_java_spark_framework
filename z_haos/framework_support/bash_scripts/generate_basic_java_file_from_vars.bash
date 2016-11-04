@@ -59,5 +59,6 @@ EOT
 # Do not indent this line above here!
 }
 
-#mkdir -p $java_files_output_directory_name
+mkdir -p $java_files_output_directory_name
+
 #add_header_to_java_file

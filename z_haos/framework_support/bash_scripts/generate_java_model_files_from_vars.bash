@@ -248,8 +248,7 @@ EOT
 # Do not indent this line above here!
 }
 
-function create_java_model_files(){
-    display_file_creation_location_vars
+function generate_file_one(){
     add_header_to_java_model_file_one
     add_create_function_to_model_file_one
     add_check_function_to_model_file_one
@@ -257,10 +256,18 @@ function create_java_model_files(){
     add_remove_user_function_to_model_file_one
     add_list_return_functions_to_model_file_one
     add_footer_to_model_file_one
-    
+}
+
+function generate_file_two(){
     add_header_to_model_file_two
     add_attribute_declerations_to_model_file_two
     add_getters_and_setters_to_model_file_two
     add_footer_to_to_model_file_two
+}
+
+function create_java_model_files(){
+    #display_file_creation_location_vars
+    generate_file_one
+    generate_file_two
 }
 

@@ -6,7 +6,6 @@ java_class_model_files_directory="$scripted_framework_output_root_directory/main
 
 ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/TemplateEngine"
 
-
 driver_script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 framework_support_files_directory="$driver_script_directory/framework_support"
 support_scripts_dir="$framework_support_files_directory/bash_scripts"
@@ -39,7 +38,7 @@ function display_java_class_config_variables(){
 
 function create_files_from_java_class_configs(){
     
-
+    
     # Create array of config files.
     config_files_arr=($class_configs_dir/*)
 
@@ -50,6 +49,8 @@ function create_files_from_java_class_configs(){
   
         # Create Java Class File !! THIS NEEDS TO BE EXPLAINED BETTER!      
         source $support_scripts_dir/generate_basic_java_file_from_vars.bash
+
+        #mkdir -p $java_files_output_directory_name
         
         add_header_to_java_file
         
@@ -152,20 +153,28 @@ function spark_framework_haos_bash(){
     source $support_scripts_dir/make_frameworks_dir_structure.bash
     create_files_from_java_class_configs;
 }
-#clear
-spark_framework_haos_bash
 
-
-: << 'EOF'
-    for config_line in "${class_configs_lines[@]}"
-    do
-        printf "%s" "$config_line"
-    done
-
-function test_setup(){
-    bash $support_scripts_dir/test.bash
-    bash $class_configs_dir/test.bash
-    
+function run_diff_test(){
+    diff_test_results=$(diff -r src/ x_diffs/src_original/)
+    printf "\nDIFF TEST RESULTS!\n\n"
+    if [ "$diff_test_results" != "" ] 
+    then
+        printf "%s" "$diff_test_results"
+        echo "The directory was modified"
+    else
+        printf "%s\n" "None"
+    fi
+    printf "\n---- END of RESULTS ----\n\n"
 }
 
-EOF
+function delete_created_boilerplate(){
+    read -p "Are you sure? (Y/n) " -n 1 -r
+    echo    # (optional) move to a new line
+    if [[ $REPLY =~ ^[Y]$ ]]
+    then
+        rm -rf $scripted_framework_output_root_directory
+    fi    
+}
+spark_framework_haos_bash
+run_diff_test
+
