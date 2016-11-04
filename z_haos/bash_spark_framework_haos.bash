@@ -1,6 +1,8 @@
+scripts_build_dir="$GOPATH/y_build"
+scripts_built_for_diff_compare="$GOPATH/x_diffs"
+scripted_framework_output_root_directory="$scripts_build_dir/src"
 
-scripted_framework_output_root_directory="$GOPATH/src"
-NAME_THIS_OUTPUT_DIRECTORY="$scripted_framework_output_root_directory/main/java"
+java_files_src_directory="$scripted_framework_output_root_directory/main/java"
 
 java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/Model"
 
@@ -36,61 +38,6 @@ function display_java_class_config_variables(){
     printf "Class Creator : %s\n" "$java_class_creator"
 }
 
-function create_files_from_java_class_configs(){
-    
-    
-    # Create array of config files.
-    config_files_arr=($class_configs_dir/*)
-
-    # Create files from each config file.
-    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
-        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
-        parse_config_lines_in_file_into_java_class_build_variables
-  
-        # Create Java Class File !! THIS NEEDS TO BE EXPLAINED BETTER!      
-        source $support_scripts_dir/generate_basic_java_file_from_vars.bash
-
-        #mkdir -p $java_files_output_directory_name
-        
-        add_header_to_java_file
-        
-        for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
-            create_attribute_array_split
-            add_attribute_decleration_to_java_file
-        done
-        
-        for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
-            create_attribute_array_split
-            add_attribute_getter_to_java_file
-            add_attribute_setter_to_java_file
-        done
-        
-        add_footer_to_java_file
-        
-        # Create Java Model Files.
-        java_class_model_files_directory_and_name_one="$java_class_model_files_directory/Model.java"
-        java_class_model_files_directory_and_name_two="$java_class_model_files_directory/UserTable.java"
-        source $support_scripts_dir/generate_java_model_files_from_vars.bash
-        
-        create_java_model_files
-        
-        # Create FreeMarker templet for Create Form.
-        ftl_files_output_directory_and_file_name="$ftl_file_output_directory/createForm.ftl"
-        source $support_scripts_dir/generate_create_form_ftl_file_from_vars.bash
-        
-        add_header_to_ftl_file
-        
-        for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
-            create_attribute_array_split
-            add_attribute_set_form_field_to_ftl_file
-        done        
-        
-        add_footer_to_ftl_file
-        #source $support_scripts_dir/generate_basic_java_file_from_vars.bash
-        #display_java_class_config_variables
-    done    
-}
-
 function create_attribute_array_split(){
         declare -a 'attribute_array_split=('"${java_class_attribute_array[attribute_array_index]}"')'
         
@@ -120,7 +67,7 @@ function parse_config_lines_in_file_into_java_class_build_variables(){
     
     java_class_file_name=$(printf "%s.java" $java_class_name)
     
-    java_files_output_directory_name=$NAME_THIS_OUTPUT_DIRECTORY/$java_package_for_class
+    java_files_output_directory_name=$java_files_src_directory/$java_package_for_class
     java_files_output_directory_and_file_name=$java_files_output_directory_name/$java_class_file_name
     
     java_class_attribute_array=()
@@ -145,36 +92,72 @@ EOF
 function create_jave_class_config_array_from_file(){
     java_class_config_file=$1
     readarray class_configs_lines < $java_class_config_file
+}
+
+function create_files_from_java_class_configs(){
     
+    # Create array of config files.
+    config_files_arr=($class_configs_dir/*)
+
+    # Create files from each config file.
+    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
+        
+        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
+        parse_config_lines_in_file_into_java_class_build_variables
+
+        # Create basic Java File.
+        source $support_scripts_dir/generate_basic_java_file_from_vars.bash
+        create_java_file
+
+        # Create Java Model Files.
+        source $support_scripts_dir/generate_java_model_files_from_vars.bash
+        create_java_model_files
+        
+        # Create FreeMarker templet for Create Form.
+        source $support_scripts_dir/generate_create_form_ftl_file_from_vars.bash
+        create_create_ftl_file
+    done    
 }
 
 function spark_framework_haos_bash(){
     
-    source $support_scripts_dir/make_frameworks_dir_structure.bash
     create_files_from_java_class_configs;
 }
 
+function delete_existing(){
+    rm -rf $scripted_framework_output_root_directory
+}
+
 function run_diff_test(){
-    diff_test_results=$(diff -r src/ x_diffs/src_original/)
+    diff_test_results=$(diff -r --brief $scripts_build_dir/ $scripts_built_for_diff_compare/)
     printf "\nDIFF TEST RESULTS!\n\n"
     if [ "$diff_test_results" != "" ] 
     then
         printf "%s" "$diff_test_results"
         echo "The directory was modified"
+    printf "\n---- END of RESULTS ----\n\n"
     else
         printf "%s\n" "None"
+        printf "\n---- END of RESULTS ----\n\n"
+        delete_created_boilerplate_with_prompt
+        clear
     fi
-    printf "\n---- END of RESULTS ----\n\n"
 }
 
-function delete_created_boilerplate(){
-    read -p "Are you sure? (Y/n) " -n 1 -r
-    echo    # (optional) move to a new line
-    if [[ $REPLY =~ ^[Y]$ ]]
+function delete_created_boilerplate_with_prompt(){
+    read -p "Delete Creation?(y/n) " -n 1 -r
+    echo    # move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]
     then
         rm -rf $scripted_framework_output_root_directory
     fi    
 }
-spark_framework_haos_bash
-run_diff_test
 
+function copy_static_files(){
+    dir_to_copy_from="$framework_support_files_directory/z_static_files_for_copy"
+    dir_to_copy_to="$scripts_build_dir"
+    cp -R dir_to_copy_from/. dir_to_copy_to/
+}
+#delete_existing
+#spark_framework_haos_bash
+#run_diff_test

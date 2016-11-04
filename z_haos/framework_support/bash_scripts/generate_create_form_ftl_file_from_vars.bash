@@ -85,7 +85,6 @@ EOT
     esac
 }
 
-
 function add_footer_to_ftl_file(){
 cat  << EOT >> $ftl_files_output_directory_and_file_name
 
@@ -130,6 +129,21 @@ cat  << EOT >> $ftl_files_output_directory_and_file_name
 </script>
 EOT
 # Do not indent this line above here!
+}
+
+function create_create_ftl_file(){
+    mkdir -p $ftl_file_output_directory
+    ftl_files_output_directory_and_file_name="$ftl_file_output_directory/createForm.ftl"
+
+    add_header_to_ftl_file
+    
+    for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
+        create_attribute_array_split
+        add_attribute_set_form_field_to_ftl_file
+    done        
+    
+    add_footer_to_ftl_file
+
 }
 
 #mkdir -p $java_files_output_directory_name

@@ -267,6 +267,12 @@ function generate_file_two(){
 
 function create_java_model_files(){
     #display_file_creation_location_vars
+    
+    mkdir -p $java_class_model_files_directory
+
+    java_class_model_files_directory_and_name_one="$java_class_model_files_directory/Model.java"
+    java_class_model_files_directory_and_name_two="$java_class_model_files_directory/UserTable.java"
+
     generate_file_one
     generate_file_two
 }
