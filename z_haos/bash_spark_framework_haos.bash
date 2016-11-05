@@ -1,4 +1,4 @@
-scripts_build_dir="$GOPATH/y_build"
+scripts_build_dir="$GOPATH/a_build"
 scripts_built_for_diff_compare="$GOPATH/x_diffs"
 scripted_framework_output_root_directory="$scripts_build_dir/src"
 
@@ -128,7 +128,23 @@ function delete_existing(){
     rm -rf $scripts_build_dir
 }
 
-function run_diff_test(){
+function diff_test_entire_build_verbose(){
+    diff_test_results=$(diff -r $scripts_build_dir/ $scripts_built_for_diff_compare/)
+    printf "\nDIFF TEST RESULTS!\n\n"
+    if [ "$diff_test_results" != "" ] 
+    then
+        printf "%s" "$diff_test_results"
+        echo "The directory was modified"
+    printf "\n---- END of RESULTS ----\n\n"
+    else
+        printf "%s\n" "None"
+        printf "\n---- END of RESULTS ----\n\n"
+        #delete_created_boilerplate_with_prompt
+        
+    fi
+}
+
+function diff_test_entire_build_not_verbose(){
     diff_test_results=$(diff -r --brief $scripts_build_dir/ $scripts_built_for_diff_compare/)
     printf "\nDIFF TEST RESULTS!\n\n"
     if [ "$diff_test_results" != "" ] 
@@ -139,8 +155,21 @@ function run_diff_test(){
     else
         printf "%s\n" "None"
         printf "\n---- END of RESULTS ----\n\n"
-        delete_created_boilerplate_with_prompt
-        clear
+    fi
+}
+
+function diff_test_model_verbose(){
+    diff_test_results=$(diff -r $scripts_build_dir/src/main/java/Model $scripts_built_for_diff_compare/src/main/java/Model)
+    printf "\nDIFF TEST RESULTS!\n\n"
+    if [ "$diff_test_results" != "" ] 
+    then
+        printf "%s" "$diff_test_results"
+        echo "The directory was modified"
+    printf "\n---- END of RESULTS ----\n\n"
+    else
+        printf "%s\n" "None"
+        printf "\n---- END of RESULTS ----\n\n"
+        
     fi
 }
 
@@ -159,8 +188,18 @@ function copy_static_files(){
     cp -R $dir_to_copy_from/. $dir_to_copy_to/
 }
 
+function copy_files_needing_abstraction(){
+    dir_to_copy_from="$framework_support_files_directory/z_copy_but_need_abstraction"
+    dir_to_copy_to="$scripts_build_dir"
+    cp -R $dir_to_copy_from/. $dir_to_copy_to/
+}
+
+delete_existing
 copy_static_files
+copy_files_needing_abstraction
+spark_framework_haos_bash
+diff_test_entire_build_verbose
 delete_created_boilerplate_with_prompt
-#delete_existing
-#spark_framework_haos_bash
-#run_diff_test
+
+#diff_test_entire_build_not_verbose
+#diff_test_model_verbose
