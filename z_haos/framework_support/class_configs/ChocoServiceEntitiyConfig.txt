@@ -1,0 +1,5 @@
+entities
+Service
+private String providableServiceIdNum "ID NUMBER" "Enter ID number providable service."
+private String providableServiceDescription "Service Descriptor" "Enter description for providable service."
+Benjamin Haos
