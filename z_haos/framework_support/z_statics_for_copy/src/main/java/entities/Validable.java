@@ -1,9 +1,5 @@
-package User;
+package entities;
 
-/**
- *
- * @author prash_000
- */
 public interface Validable {
 
     /**

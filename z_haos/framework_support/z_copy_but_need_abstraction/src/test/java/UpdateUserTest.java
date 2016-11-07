@@ -1,17 +1,16 @@
-import Model.UserModel;
+//import models.UserModel;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import org.junit.Test;
 
-/**
- *
- * @author prash_000
- */
 public class UpdateUserTest {
     
     public UpdateUserTest() {
     }
 
+    /**
+     *
+     * @author prash_000
     @Test
     public void aUserIsCorrectlyUpdated() {
         
@@ -27,4 +26,5 @@ public class UpdateUserTest {
         expect(model.updateUser("T14", "Test Name","Mid Name","Test",20,'M',"1234567891",12 
         )).andReturn(0);
     }
+     */
 }

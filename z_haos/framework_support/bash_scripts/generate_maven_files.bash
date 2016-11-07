@@ -1,3 +1,11 @@
+pom_file_write_path="$scripts_build_dir/pom.xml"
+
+function display_pom_file_creation_location_vars(){
+    printf "%s\n" "$pom_file_write_path"
+}
+
+function add_header_to_pom_file(){
+    cat  << EOHT > $pom_file_write_path
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -58,7 +66,19 @@
                     <goal>java</goal>  
                     </goals>  
                     <configuration>  
-                    <mainClass>Driver.MainClass</mainClass>  
+EOHT
+# Do not indent this line above here!
+    
+}
+
+function add_body_to_pom_file(){
+    cat  << EOBT >> $pom_file_write_path
+                    <mainClass>drivers.MainClass</mainClass>  
+EOBT
+}
+
+function add_footer_to_pom_file(){
+    cat  << EOFT >> $pom_file_write_path
                     </configuration>  
                     </execution>  
                 </executions>  
@@ -66,3 +86,12 @@
         </plugins>  
     </build>  
 </project>
+EOFT
+}
+
+function create_pom_file(){
+    #display_pom_file_creation_location_vars
+    add_header_to_pom_file
+    add_body_to_pom_file
+    add_footer_to_pom_file
+}

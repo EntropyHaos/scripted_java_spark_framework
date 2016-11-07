@@ -1,4 +1,4 @@
-User
+entities
 User
 private String id "User Id (Less than 8 Characters)" "Enter Unique ID Less Than 8 Characters"
 private String firstName "First Name" "Enter First Name"

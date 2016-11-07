@@ -12,19 +12,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-/**
- *
- * @author prash_000
- */
+
 public class MainClass {
     
-    /**
-     *  Entry Point
-     * @param args
-     */
     public static void main(String[] args) {
         staticFileLocation("/public");
         MainClass s = new MainClass();
+        
+        port(8080); // Spark will run on port 8080
+        
         s.init();
     }
     
