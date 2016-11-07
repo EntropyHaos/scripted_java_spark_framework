@@ -256,16 +256,24 @@ function generate_files_from_java_class_configs(){
         create_java_model_files
         
         # Create FreeMarker templet Create Form for entitity.
-        source $support_scripts_dir/generate_ftl_create_form.bash
-        create_create_ftl_file
+        source $support_scripts_dir/generate_ftl_create_entity_form.bash
+        create_create_entity_ftl_file
         
-        # Create FreeMarker templet Create Form for entitity.
+        # Create FreeMarker templet Create Entity Form for entitity.
+        source $support_scripts_dir/generate_ftl_show_entity.bash
+        create_show_entity_ftl_file
+        
+        # Create FreeMarker templet Update Entity Form for entitity.
+        source $support_scripts_dir/generate_ftl_update_entity_form.bash
+        create_update_entity_ftl_file
+        
+        # Create FreeMarker templet Remove Entity Form for entitity.
         source $support_scripts_dir/generate_ftl_remove_form.bash
         create_remove_ftl_file
     done
     #ftl_files_output_directory_and_main_ftl_file_name
-    generate_main_ftl_file
     generate_driver_file
+    generate_main_ftl_file
 }
 
 function generate_main_ftl_file(){

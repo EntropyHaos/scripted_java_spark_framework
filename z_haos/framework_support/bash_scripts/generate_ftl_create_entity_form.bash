@@ -1,5 +1,3 @@
-# echo $scripted_framework_output_root_directory
-
 function display_file_creation_location_vars(){
     printf "PACKAGE : %s\n" $java_files_output_directory_name
     printf "CREATING FILE : %s\n" $java_files_output_directory_and_file_name
@@ -131,7 +129,7 @@ EOT
 # Do not indent this line above here!
 }
 
-function create_create_ftl_file(){
+function create_create_entity_ftl_file(){
     # Make sure there is a directory to put the files in.
     mkdir -p $ftl_file_output_directory
     
@@ -146,8 +144,4 @@ function create_create_ftl_file(){
     done        
     
     add_footer_to_ftl_file
-
 }
-
-#mkdir -p $java_files_output_directory_name
-#add_header_to_java_file

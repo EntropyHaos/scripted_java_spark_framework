@@ -247,6 +247,19 @@ EOT
 }
 
 
+
+function create_java_file(){
+    #display_file_creation_location_vars
+    local entity_var
+    entity_var=$java_class_name
+    add_header_to_java_file
+    #add_attribute_decleration_to_java_file
+    #add_getters_and_setters_to_java_file
+    #add_footer_with_implemented_java_file
+}
+
+#add_header_to_java_file
+
 function add_footer_with_implemented_java_file(){
 
 
@@ -263,17 +276,6 @@ cat  << EOT >> $java_files_output_directory_and_file_name
 EOT
 # Do not indent this line above here!
 }
-
-function create_java_file(){
-    display_file_creation_location_vars
-    add_header_to_java_file
-    #add_attribute_decleration_to_java_file
-    #add_getters_and_setters_to_java_file
-    #add_footer_with_implemented_java_file
-}
-
-#add_header_to_java_file
-
 
 function add_attribute_decleration_to_java_file(){
     for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
