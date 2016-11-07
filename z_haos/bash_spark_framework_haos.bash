@@ -204,10 +204,6 @@ function generate_maven_pom_file(){
     create_pom_file
 }
 
-function generate_driver_file(){
-    source $support_scripts_dir/generate_java_driver_file.bash
-    create_java_file
-}
 
 function parse_config_lines_in_file_into_java_class_build_variables(){
 
@@ -272,8 +268,41 @@ function generate_files_from_java_class_configs(){
         create_remove_ftl_file
     done
     #ftl_files_output_directory_and_main_ftl_file_name
-    generate_driver_file
+    #generate_driver_file
+    generate_java_driver_file
     generate_main_ftl_file
+}
+function generate_driver_file(){
+    source $support_scripts_dir/generate_java_driver_file.bash
+    create_java_file
+}
+
+function generate_java_driver_file(){
+    source $support_scripts_dir/generate_java_driver_file.bash
+    
+    add_header_to_java_main_file
+    
+
+    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
+        
+        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
+        parse_config_lines_in_file_into_java_class_build_variables
+        add_model_decleration
+    done
+    
+    add_root_route
+    
+    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
+        
+        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
+        parse_config_lines_in_file_into_java_class_build_variables
+        add_get_and_post_to_java_main_file
+    done
+    
+    add_footer_to_java_main_file
+: << 'EOP'
+    add_footer_to_java_main_file
+EOP
 }
 
 function generate_main_ftl_file(){
