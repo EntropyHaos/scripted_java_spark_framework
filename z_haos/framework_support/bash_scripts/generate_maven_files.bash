@@ -73,7 +73,7 @@ EOHT
 
 function add_body_to_pom_file(){
     cat  << EOBT >> $pom_file_write_path
-                    <mainClass>Driver.MainClass</mainClass>  
+                    <mainClass>drivers.MainClass</mainClass>  
 EOBT
 }
 

@@ -1,5 +1,5 @@
-import Model.UserModel;
-import User.User;
+import models.UserModel;
+import entities.User;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.easymock.EasyMock;

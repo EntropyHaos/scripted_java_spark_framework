@@ -132,8 +132,11 @@ EOT
 }
 
 function create_create_ftl_file(){
+    # Make sure there is a directory to put the files in.
     mkdir -p $ftl_file_output_directory
-    ftl_files_output_directory_and_file_name="$ftl_file_output_directory/createForm.ftl"
+    
+    local create_file_name="create"$java_class_name"Form.ftl"
+    ftl_files_output_directory_and_file_name="$ftl_file_output_directory/$create_file_name"
 
     add_header_to_ftl_file
     

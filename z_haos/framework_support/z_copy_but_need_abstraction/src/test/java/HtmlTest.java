@@ -1,4 +1,4 @@
-import Model.UserModel;
+import models.UserModel;
 import java.util.Collections;
 import org.junit.Test;
 import org.easymock.EasyMock;

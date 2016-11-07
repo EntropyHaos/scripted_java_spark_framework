@@ -1,4 +1,4 @@
-import Model.UserModel;
+import models.UserModel;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import org.junit.Test;

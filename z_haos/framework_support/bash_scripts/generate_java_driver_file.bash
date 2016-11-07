@@ -4,6 +4,8 @@ function display_file_creation_location_vars(){
     #printf "PACKAGE : %s\n" $java_files_output_directory_name
     printf "CREATING FILE : %s\n" $java_driver_files_location_and_name
     
+: << 'EOJ'
+
     printf "Driver to be configurated For %s entities:\n\n" ${#driver_config_entities[@]}
     
     for entity_var in ${driver_config_entities[@]}
@@ -12,6 +14,7 @@ function display_file_creation_location_vars(){
     done
     
     printf "\n" ${#driver_config_entities[@]}
+EOJ
 }
 
 function add_header_to_java_file(){
@@ -20,21 +23,76 @@ mkdir -p $java_driver_files_location
 
 : << 'EOC'
 EOC
-insert_var_1=User
-insert_var_2=userMod
-insert_var3=UserModel
-insert_var4=Users
-insert_var5=UserList
-insert_var6=UsersId
-insert_var7=users
 
+    #java_class_name_lower_case=$(printf "%s" ${class_configs_lines[1]})
+    #java_class_name_lower_case="$(tr '[:upper:]' '[:lower:]' <<< ${java_class_name_lower_case:0:1})${java_class_name_lower_case:1}"
+
+
+entity_var_lower_case=$(printf "%s" $entity_var)
+
+
+entity_var_lower_case="$(tr '[:upper:]' '[:lower:]' <<< ${entity_var_lower_case:0:1})${entity_var_lower_case:1}"
+
+
+insert_var_1=$entity_var
+insert_var_2=$(printf "%sMod" $entity_var_lower_case)
+insert_var_3=$(printf "%sModel" $entity_var)
+insert_var_4=$(printf "%ss" $entity_var)
+insert_var_5=$(printf "%sList" $entity_var)
+insert_var_6=$(printf "%ssId" $entity_var)
+insert_var_7=$(printf "%ss" $entity_var_lower_case)
+insert_var_8=$(printf "%sForm" $entity_var)
+
+: << 'EOD'
+
+echo $insert_var_1
+echo $insert_var_2
+echo $insert_var_3
+echo $insert_var_4
+echo $insert_var_5
+echo $insert_var_6
+echo $insert_var_7
+echo $insert_var_8
+EOD
+
+    for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
+        create_attribute_array_split
+#        cat  << EOT >> $java_class_model_files_directory_and_name_one
+#EOT
+        #echo $atribute_name
+        
+        temp_insert_var=""
+        temp_insert_var=$atribute_name
+        temp_insert_var="$(tr '[:lower:]' '[:upper:]' <<< ${temp_insert_var:0:1})${temp_insert_var:1}"
+        if (( $attribute_array_index == 0 ))
+        then
+            param_insert="("
+        fi
+        if (("$attribute_array_index" < "$((${#java_class_attribute_array[@]}-1))")); then
+            param_insert=$(printf "%su.get%s(), " "$param_insert" "$temp_insert_var")
+        else
+            param_insert=$(printf "%su.get%s())" "$param_insert" "$temp_insert_var")
+        fi
+        index_array=""
+        index_array_upper_case=""
+
+        if (( $attribute_array_index == 0 ))
+        then
+            index_param=$atribute_name
+            index_param_upper_case=$index_param
+            index_param_upper_case="$(tr '[:lower:]' '[:upper:]' <<< ${index_param_upper_case:0:1})${index_param_upper_case:1}"
+        fi
+    done
+
+    #echo $param_insert
+    #echo $index_param_upper_case
 
 cat  << EOT > $java_driver_files_location_and_name
-package Driver;
+package drivers;
 
-import Model.$insert_var3;
-import TemplateEngine.FreeMarkerEngine;
-import $insert_var_1.$insert_var_1;
+import models.$insert_var_3;
+import templateEngine.FreeMarkerEngine;
+import entities.$insert_var_1;
 import java.io.IOException;
 import static spark.Spark.*;
 import spark.ModelAndView;
@@ -60,10 +118,10 @@ public class MainClass {
      *  Function for Routes
      */
     private void init() {
-    	$insert_var3 $insert_var_2 = new $insert_var3();
+    	$insert_var_3 $insert_var_2 = new $insert_var_3();
         
-    	$insert_var_2.create$insert_var_1("benHaos", "Ben", "Jon", "Haos", 43, 'M', "4142021234", 12345);
-    	$insert_var_2.create$insert_var_1("entHaos", "Joe", "Jack", "Henry", 18, 'M', "1234567890", 54321);
+    	//$insert_var_2.create$insert_var_1("benHaos", "Ben", "Jon", "Haos", 43, 'M', "4142021234", 12345);
+    	//$insert_var_2.create$insert_var_1("entHaos", "Joe", "Jack", "Henry", 18, 'M', "1234567890", 54321);
         
         get("/", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
@@ -74,7 +132,7 @@ public class MainClass {
         
         get("/create$insert_var_1", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
-           viewObjects.put("templateName", "createForm.ftl");
+           viewObjects.put("templateName", "create$insert_var_8.ftl");
            return new ModelAndView(viewObjects, "main.ftl");
         }, new FreeMarkerEngine());
         
@@ -86,9 +144,12 @@ public class MainClass {
                     response.status(400);
                     return "Correct the fields";
                 }
-                if($insert_var_2.check$insert_var_1(u.getId())) {
-                    int id = $insert_var_2.create$insert_var_1(u.getId(), u.getFirstName(), u.getMiddleName(), u.getLastName(),
-                    u.getAge(), u.getGender(), u.getPhone(), u.getZip());
+                    if($insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
+                    int id = $insert_var_2.create$insert_var_1$param_insert;
+EOT
+
+
+cat  << EOT >> $java_driver_files_location_and_name
                     response.status(200);
                     response.type("application/json");
                     return id;
@@ -104,22 +165,22 @@ public class MainClass {
                 }
         });
         
-        get("/getAll$insert_var4", (request, response) -> {
+        get("/getAll$insert_var_4", (request, response) -> {
             response.status(200);
             Map<String, Object> viewObjects = new HashMap<String, Object>();
             viewObjects.put("templateName", "show$insert_var_1.ftl");
             return new ModelAndView(viewObjects, "main.ftl");
         }, new FreeMarkerEngine());
 
-        get("/getJson$insert_var5", (request, response) -> {
+        get("/getJson$insert_var_5", (request, response) -> {
             response.status(200);
             return toJSON($insert_var_2.sendElements());
         });
 
         get("/remove$insert_var_1", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
-           viewObjects.put("templateName", "remove$insert_var_1.ftl"); 
-           viewObjects.put("$insert_var7", toJSON($insert_var_2.send$insert_var6()));
+           viewObjects.put("templateName", "remove$insert_var_8.ftl"); 
+           viewObjects.put("$insert_var_7", toJSON($insert_var_2.send$insert_var_6()));
            return new ModelAndView(viewObjects, "main.ftl");
         }, new FreeMarkerEngine());
 
@@ -132,7 +193,7 @@ public class MainClass {
         
         get("/update$insert_var_1", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
-           viewObjects.put("templateName", "updateForm.ftl");
+           viewObjects.put("templateName", "update$insert_var_8.ftl");
            return new ModelAndView(viewObjects, "main.ftl");
         }, new FreeMarkerEngine());
         
@@ -145,9 +206,8 @@ public class MainClass {
                     response.status(400);
                     return "Correct the fields";
                 }
-                if(!$insert_var_2.check$insert_var_1(u.getId())) {
-                    int id = $insert_var_2.update$insert_var_1(u.getId(), u.getFirstName(), u.getMiddleName(), u.getLastName(),
-                    u.getAge(), u.getGender(), u.getPhone(), u.getZip());
+                if(!$insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
+                    int id = $insert_var_2.update$insert_var_1$param_insert;
                     response.status(200);
                     response.type("application/json");
                     return id;
@@ -272,7 +332,4 @@ cat  << EOT >> $java_files_output_directory_and_file_name
     }
 EOT
 # Do not indent this line above here!
-
-    
-    
 }
