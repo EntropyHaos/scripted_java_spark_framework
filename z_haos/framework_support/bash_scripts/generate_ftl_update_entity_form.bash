@@ -115,6 +115,18 @@ EOT
 EOT
     ;;
 
+    "boolean" )
+    
+    cat  << EOT >> $ftl_files_output_directory_and_file_name
+
+    <div class="form-group">
+		<label for="$atribute_name">$atribute_text_for_label</label><br>
+		<input type="radio" name="$atribute_name" value="True"> True
+		<input type="radio" name="$atribute_name" value="False" checked> False
+    </div>
+EOT
+    ;;
+
     * )
     cat  << EOT >> $ftl_files_output_directory_and_file_name
 

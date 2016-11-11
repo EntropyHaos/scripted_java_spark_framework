@@ -2,4 +2,7 @@ entities
 Service
 private String providableServiceIdNum "ID NUMBER" "Enter ID number providable service."
 private String providableServiceDescription "Service Descriptor" "Enter description for providable service."
+private boolean isProvidableByDietitian "Providable by Dietitian" "True/False"
+private boolean isProvidableByExerciseExpert "Providable by Exercise Expert" "True/False"
+private boolean isProvidableByInternist "Providable by Internist" "True/False"
 Benjamin Haos
