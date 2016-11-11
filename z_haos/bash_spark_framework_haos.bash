@@ -91,7 +91,6 @@ function display_java_class_config_variables(){
     printf "Class Creator : %s\n" "$java_class_creator"
 }
 
-
 function create_jave_class_config_array_from_file(){
     java_class_config_file=$1
     readarray class_configs_lines < $java_class_config_file
@@ -134,7 +133,7 @@ function delete_existing(){
 }
 
 function delete_created_boilerplate_with_prompt(){
-    read -p "Delete Creation?(y/n) " -n 1 -r
+    read -p "Delete Creation? (y/n) " -n 1 -r
     echo    # move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
@@ -204,7 +203,6 @@ function generate_maven_pom_file(){
     create_pom_file
 }
 
-
 function parse_config_lines_in_file_into_java_class_build_variables(){
 
     start_index_for_class_attributes_array_offset=2
@@ -272,6 +270,7 @@ function generate_files_from_java_class_configs(){
     generate_java_driver_file
     generate_main_ftl_file
 }
+
 function generate_driver_file(){
     source $support_scripts_dir/generate_java_driver_file.bash
     create_java_file
@@ -340,6 +339,19 @@ spark_framework_haos_bash
 generate_maven_pom_file
 #diff_test_entire_build_verbose
 #diff_test_entire_build_not_verbose
+
+function prompt_for_clean_and_install(){
+    read -p "Perform Maven Clean and Install? (y/n) " -n 1 -r
+    echo    # move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        #rm -rf $scripts_build_dir
+        cd $scripts_build_dir
+        mvn clean install
+        cd $GOPATH
+    fi    
+}
+prompt_for_clean_and_install
 delete_created_boilerplate_with_prompt
 
 : << 'EOP' # EOP is a 'pause' used for dev. and testing. Should be removed.

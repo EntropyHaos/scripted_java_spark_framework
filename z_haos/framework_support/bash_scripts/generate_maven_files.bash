@@ -14,38 +14,65 @@ function add_header_to_pom_file(){
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
+
+        <!-- NEEDS COMMENT -->
+
         <dependency>
            <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
             <version>2.3</version>
         </dependency>
+
+        <!-- NEEDS COMMENT -->
+
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-template-freemarker</artifactId>
             <version>2.3</version>
         </dependency>
+
+        <!-- NEEDS COMMENT -->
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.5.1</version>
         </dependency>
+
+        <!-- NEEDS COMMENT -->
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.5.1</version>
         </dependency>
+
+        <!-- NEEDS COMMENT -->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- NEEDS COMMENT -->
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>3.3.1</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- MongoDB -->
+        
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
