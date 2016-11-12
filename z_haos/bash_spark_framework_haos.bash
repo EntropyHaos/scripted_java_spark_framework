@@ -289,6 +289,8 @@ function generate_java_driver_file(){
         add_model_decleration
     done
     
+    add_mongo_db_controller_decleration
+    
     add_root_route
     
     for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do

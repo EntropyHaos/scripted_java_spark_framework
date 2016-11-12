@@ -35,8 +35,11 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 import models.*;
 import entities.*;
+import controls.*;
 
 public class MainClass {
     
@@ -126,6 +129,13 @@ function add_model_decleration(){
 EOT
 }
 
+function add_mongo_db_controller_decleration(){
+
+    cat  << EOT >> $java_driver_files_location_and_name
+    	ChocoMongoController mongoController = new ChocoMongoController("ChocoMongoDB");
+EOT
+}
+
 function add_root_route(){
 cat  << EOT >> $java_driver_files_location_and_name
 
@@ -162,10 +172,11 @@ function add_get_and_post_to_java_main_file(){
                     response.status(400);
                     return "Correct the fields";
                 }
-                    if($insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
+                if($insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
                     int id = $insert_var_2.create$insert_var_1$param_insert;
                     response.status(200);
                     response.type("application/json");
+                    mongoController.add_new_record(u);
                     return id;
                 }
                 else {

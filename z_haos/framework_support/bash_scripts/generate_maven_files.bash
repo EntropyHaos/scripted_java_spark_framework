@@ -70,7 +70,7 @@ function add_header_to_pom_file(){
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.10.1</version>
+			<version>3.2.2</version>
 		</dependency>
 
     </dependencies>
