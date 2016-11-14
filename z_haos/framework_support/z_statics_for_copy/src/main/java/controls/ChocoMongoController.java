@@ -9,9 +9,8 @@ import com.mongodb.DBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.MongoSocketOpenException;
 import com.mongodb.util.JSON;
-
-import com.mongodb.MongoException;
 
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -31,29 +30,51 @@ import java.util.List;
  
 public class ChocoMongoController {
     
-    private String mongoDatabaseToWorkWith;
+    private String mongoDatabaseToWorkWithString;
     private String collectionControlled;
     private MongoClient mongoClient;
     private MongoDatabase mongoDatabaseControlled;
     
-    public ChocoMongoController(String mongoDatabaseToWorkWith) {
-        this.mongoDatabaseToWorkWith = mongoDatabaseToWorkWith;
+    private boolean mongoDatabaseServerIsAvailable;
+    
+    public ChocoMongoController(String requestedMongoDatabaseToWorkWith) {
+
+        mongoDatabaseToWorkWithString = requestedMongoDatabaseToWorkWith;
         
-        this.mongoClient = new MongoClient("localhost", 27017);
-        
+        // Create a Client
+        mongoClient = new MongoClient("localhost", 27017);
+
+        // Test if MongoDB is running. Sauce : http://stackoverflow.com/questions/36527991/how-to-check-if-mongodb-connection-is-established-with-java
+        mongoDatabaseServerIsAvailable = false;
         try {
-            this.mongoDatabaseControlled = mongoClient.getDatabase(mongoDatabaseToWorkWith);
+            mongoClient.getAddress();
+            System.out.println("MongoDB is running.");
+            mongoDatabaseServerIsAvailable = true;
+        } catch(Exception  e) {
+            System.out.println("MONGO DB IS NOT RUNNING!");
+            mongoClient.close();
         }
-        catch (MongoException e) {
-        	e.printStackTrace();
+        
+        if (mongoDatabaseServerIsAvailable){
+            try {
+                mongoDatabaseControlled = mongoClient.getDatabase(mongoDatabaseToWorkWithString);
+            }
+            catch (MongoException e) {
+            	e.printStackTrace();
+            }
         }
-        //sayHello();
+        
+        sayHello();
     }
     
     public void sayHello(){
         System.out.println("MongoDB Controller Created!");
         
-        consoleDisplayCollections();
+        if (mongoDatabaseServerIsAvailable){
+            consoleDisplayCollections();
+        } else {
+            System.out.println("MongoDB is NOT running!");
+        }
     }
 
     public void consoleDisplayCollections(){
@@ -70,17 +91,46 @@ public class ChocoMongoController {
     public void add_new_record(Object objectToAdd){
         
         String collectionToAddObjectTo = objectToAdd.getClass().getName().replaceAll("\\.", "") + "Collection";
-
-        try {
-            MongoCollection collection = mongoDatabaseControlled.getCollection(collectionToAddObjectTo);
-            Document insertDocument = Document.parse(toJSON(objectToAdd));
-            collection.insertOne(insertDocument);
-        } catch (MongoException e) {
-        	e.printStackTrace();
+        
+        if (mongoDatabaseServerIsAvailable){
+            try {
+                MongoCollection collection = mongoDatabaseControlled.getCollection(collectionToAddObjectTo);
+                Document insertDocument = Document.parse(toJSON(objectToAdd));
+                collection.insertOne(insertDocument);
+            } catch (MongoException e) {
+            	e.printStackTrace();
+            }
+        } else {
+            System.out.println("MongoDB is NOT running! Cannot add record!!");
         }
         
         //consoleDisplayDocumentsInCollectionsOne(collectionToAddObjectTo);
         //consoleDisplayDocumentsInCollectionsTwo(collectionToAddObjectTo);
+    }
+
+    public boolean removeFromCollectionDocumentByID(String entityTypeToRemove, String entityToRemoveStringID) {
+        
+        String collectionToRemoveObjectFrom = "entities" + entityTypeToRemove + "Collection";
+        String idString = "entity" + entityTypeToRemove + "IdNumber";
+        
+        boolean returnBoolean = false;
+
+        if (mongoDatabaseServerIsAvailable){
+        
+            try{
+            
+                DB db = mongoClient.getDB(mongoDatabaseToWorkWithString);
+                DBCollection collection = db.getCollection(collectionToRemoveObjectFrom);
+                
+                BasicDBObject removeQuery = new BasicDBObject();
+                removeQuery.append(idString, entityToRemoveStringID);
+                collection.remove(removeQuery);
+                returnBoolean = true;
+            }catch(Exception e){
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            }
+        }
+        return returnBoolean;
     }
 
     public void consoleDisplayDocumentsInCollectionsOne(String collectionToDisplay) {
@@ -97,17 +147,19 @@ public class ChocoMongoController {
         }
     }
 
-
     public void consoleDisplayDocumentsInCollectionsTwo(String collectionToDisplay) {
+
         try{
         
-            DB db = mongoClient.getDB(mongoDatabaseToWorkWith);
+            DB db = mongoClient.getDB(mongoDatabaseToWorkWithString);
             
             DBCollection collection = db.getCollection(collectionToDisplay);
     
             DBCursor cursor = collection.find();
             
             int i = 1;
+
+            System.out.println("\nDocuments in " + collection.getName() + "\n");
             
             while (cursor.hasNext()) { 
                 System.out.println("Inserted Document: " + i); 
@@ -120,6 +172,94 @@ public class ChocoMongoController {
         }
     }
 
+    public String getListOfCollectionsIDs(String entityTypeToGet) {
+        
+        String collectionToRemoveObjectFrom = "entities" + entityTypeToGet + "Collection";
+        
+        String idString = "entity" + entityTypeToGet + "IdNumber";
+
+        String returnString = "NOT YET!";
+
+        if (mongoDatabaseServerIsAvailable){
+        
+            try{
+            
+                DB db = mongoClient.getDB(mongoDatabaseToWorkWithString);
+                DBCollection collection = db.getCollection(collectionToRemoveObjectFrom);
+                DBCursor cursor = collection.find();
+                
+                int count = 1;
+    
+                //System.out.println("\nDocuments in " + collectionToMakeListInJSON + "\n");
+                
+                returnString = "[ ";
+               
+                while (cursor.hasNext()) { 
+
+                    BasicDBObject object = (BasicDBObject) cursor.next();
+                    
+                    //System.out.println ("Object = " + object.getString(idString));
+
+                    if (count > 1){
+                        returnString += " , ";
+                    }
+                    
+                    String temp = "";
+                    
+                    temp = "\"" + object.getString(idString) + "\"";
+                    returnString += temp;
+                    count++;
+                }
+                returnString += " ]";
+
+                System.out.println("\nreturnString = \n" + returnString + "\n");
+            }catch(Exception e){
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            }
+        }
+        
+        return returnString;
+    }
+
+    public String getCollectionListJSON(String entityTypeToGet){
+
+        String collectionToMakeListInJSON = "entities" + entityTypeToGet + "Collection";
+        
+        String returnString = "NO MONGO!";
+
+        if (mongoDatabaseServerIsAvailable){
+        
+            try{
+            
+                DB db = mongoClient.getDB(mongoDatabaseToWorkWithString);
+                DBCollection collection = db.getCollection(collectionToMakeListInJSON);
+                DBCursor cursor = collection.find();
+                
+                int count = 1;
+    
+                //System.out.println("\nDocuments in " + collectionToMakeListInJSON + "\n");
+                
+                returnString = "[ \n   {";
+                
+                while (cursor.hasNext()) { 
+    
+                    if (count > 1){
+                        returnString += "},\n   {";
+                    }
+                    String temp = "" + cursor.next();
+                    temp = temp.substring((temp.indexOf("} , \"") + 4), (temp.lastIndexOf("\"valid\"") - 3));
+                    returnString += temp;
+                    count++;
+                }
+                returnString += "}\n]\n";
+                //System.out.println("\nreturnString = \n" + returnString + "\n");
+            }catch(Exception e){
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            }
+        }
+
+        return returnString;
+    }
     /**
      *  This function converts an Object to JSON String
      * @param obj

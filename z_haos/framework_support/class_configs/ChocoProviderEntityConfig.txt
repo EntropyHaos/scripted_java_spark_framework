@@ -1,6 +1,6 @@
 entities
 Provider
-private String providerNumber "ID NUMBER" "Enter ID number for provider."
+private String entityProviderIdNumber "Provider entity ID number" "Enter ID number for new Provider entity."
 private String providerName "Name" "Enter name of provider."
 private String providerStreetAddress "Street Address" "Enter street address for provider."
 private String providerCity "City" "Enter City for provider."

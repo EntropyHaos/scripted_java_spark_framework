@@ -1,6 +1,6 @@
 entities
 User
-private String memberNumber "ID NUMBER" "Enter ID number for member."
+private String entityUserIdNumber "User entity ID number" "Enter ID number for new User entity."
 private String memberName "Name" "Enter name of member."
 private String memberStreetAddress "Street Address" "Enter street address for member."
 private String memberCity "City" "Enter City for member."

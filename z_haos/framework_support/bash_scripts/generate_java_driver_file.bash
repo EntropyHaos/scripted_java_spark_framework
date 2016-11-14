@@ -199,21 +199,22 @@ function add_get_and_post_to_java_main_file(){
 
         get("/getJson$insert_var_5", (request, response) -> {
             response.status(200);
-            return toJSON($insert_var_2.sendElements());
+            return mongoController.getCollectionListJSON("$insert_var_1");
         });
 
         get("/remove$insert_var_1", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
-           viewObjects.put("templateName", "remove$insert_var_8.ftl"); 
-           viewObjects.put("$insert_var_7", toJSON($insert_var_2.send$insert_var_6()));
+           viewObjects.put("templateName", "remove$insert_var_8.ftl");
+           viewObjects.put("$insert_var_7", mongoController.getListOfCollectionsIDs("$insert_var_1"));
            return new ModelAndView(viewObjects, "main.ftl");
         }, new FreeMarkerEngine());
 
         put("/remove$insert_var_1/:id", (request, response) -> {
             String id = request.params(":id");
             Map<String, Object> viewObjects = new HashMap<String, Object>();
-            if($insert_var_2.remove$insert_var_1(id)) return "$insert_var_1 Removed";
+            if(mongoController.removeFromCollectionDocumentByID("$insert_var_1", id)) return "$insert_var_1 Removed";
             else return "No Such $insert_var_1 Found";
+            
         });
         
         get("/update$insert_var_1", (request, response) -> {
