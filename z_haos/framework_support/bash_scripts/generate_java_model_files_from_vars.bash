@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.*;
+
 public class $model_class_name {
     private Map<String, Object> $java_class_name_lower_case;
 
@@ -203,6 +205,8 @@ table_type="$java_class_name"Table
 
     cat  << EOT > $java_class_model_files_directory_and_name_two
 package models;
+
+import org.joda.time.*;
     
 public class $table_type{    
     

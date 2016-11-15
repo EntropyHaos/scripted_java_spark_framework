@@ -353,7 +353,7 @@ function prompt_for_clean_and_install(){
         cd $GOPATH
     fi    
 }
-prompt_for_clean_and_install
+# prompt_for_clean_and_install
 delete_created_boilerplate_with_prompt
 
 : << 'EOP' # EOP is a 'pause' used for dev. and testing. Should be removed.

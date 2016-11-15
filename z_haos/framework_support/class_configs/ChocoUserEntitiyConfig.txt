@@ -6,4 +6,5 @@ private String memberStreetAddress "Street Address" "Enter street address for me
 private String memberCity "City" "Enter City for member."
 private String memberState "STATE" "Enter State for member."
 private long memberZip "ZIP CODE" "Enter zip code for member."
+private DateTime memberValidThrough "Valid Through" "Enter last day member is paid through."
 Benjamin Haos

@@ -11,6 +11,7 @@ cat  << EOT > $ftl_files_output_directory_and_main_ftl_file_name
       <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="css/bootstrap-theme.min.css">
       <link rel="stylesheet" href="css/starter-template.css">
+      <link rel="stylesheet" href="css/bootstrap-datepicker3.standalone.css">
    </head>
    <body>
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -60,6 +61,7 @@ cat  << EOT >> $ftl_files_output_directory_and_main_ftl_file_name
       </div>
       <script src="js/jquery.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
+      <script src="js/bootstrap-datepicker.min.js"></script>
       <div class="container">
          <#include "\${templateName}">
       </div>

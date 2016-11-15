@@ -65,6 +65,14 @@ function add_header_to_pom_file(){
             <scope>test</scope>
         </dependency>
         
+        <!-- Joda Time : http://www.joda.org/joda-time/ -->
+
+        <dependency>
+          <groupId>joda-time</groupId>
+          <artifactId>joda-time</artifactId>
+          <version>2.9.6</version>
+        </dependency>
+
         <!-- MongoDB -->
         
 		<dependency>

@@ -83,6 +83,17 @@ EOT
 EOT
     ;;
 
+    "DateTime" )
+    
+    cat  << EOT >> $ftl_files_output_directory_and_file_name
+
+    <div class="form-group" id="dateInput">
+		<label for="$atribute_name">$atribute_text_for_label</label><br>
+        <input  type="text" class="form-control" id="$atribute_name" name="$atribute_name" data-provide="datepicker">
+    </div>
+EOT
+    ;;
+
     * )
     cat  << EOT >> $ftl_files_output_directory_and_file_name
 
@@ -102,6 +113,15 @@ cat  << EOT >> $ftl_files_output_directory_and_file_name
     <button type="submit" class="btn btn-default">Submit</button>
   </form>
 
+<!-- Simple JS function to for datepicker -->
+<script>
+\$('#dateInput input').datepicker({
+    format: "mm/dd/yyyy",
+    todayBtn: "linked",
+    autoclose: true,
+    todayHighlight: true
+});
+</script>
 
 <!-- Simple JS Function to convert the data into JSON and Pass it as ajax Call --!>
 <script>

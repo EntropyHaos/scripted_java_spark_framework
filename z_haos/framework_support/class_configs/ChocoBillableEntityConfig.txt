@@ -3,7 +3,7 @@ Billable
 private String entityBillableIdNumber "Billable entity ID number" "Enter ID number for new Billable entity."
 private String memberNumberService "Serviced Member ID" "Enter ID of serviced member."
 private String providerNumberServicing "Servicing Provider ID" "Enter ID of servicing provider."
-private String dateServiced "Date Serviced" "Enter date service was provided."
-private String dateServicedRecorded "Date Recorded" "Enter date the service was recorded."
+private DateTime dateServiced "Date Serviced" "Enter date service was provided."
+private DateTime dateServicedRecorded "Date Recorded" "Enter date the service was recorded."
 private String serviceComment "COMMENT" "Enter comment if any."
 Benjamin Haos

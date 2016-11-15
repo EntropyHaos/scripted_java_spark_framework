@@ -173,11 +173,10 @@ function add_get_and_post_to_java_main_file(){
                     return "Correct the fields";
                 }
                 if($insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
-                    int id = $insert_var_2.create$insert_var_1$param_insert;
                     response.status(200);
                     response.type("application/json");
                     mongoController.add_new_record(u);
-                    return id;
+                    return 1;
                 }
                 else {
                     response.status(400);
@@ -233,10 +232,9 @@ function add_get_and_post_to_java_main_file(){
                     return "Correct the fields";
                 }
                 if(!$insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
-                    int id = $insert_var_2.update$insert_var_1$param_insert;
                     response.status(200);
                     response.type("application/json");
-                    return id;
+                    return 1;
                 }
                 else {
                     response.status(404);
@@ -290,6 +288,7 @@ function create_java_file(){
     #add_footer_with_implemented_java_file
 }
 
+: << 'EOJ'
 #add_header_to_java_file
 function add_header_to_java_file(){
 
@@ -591,5 +590,4 @@ cat  << EOT >> $java_files_output_directory_and_file_name
 EOT
 # Do not indent this line above here!
 }
-: << 'EOJ'
 EOJ
