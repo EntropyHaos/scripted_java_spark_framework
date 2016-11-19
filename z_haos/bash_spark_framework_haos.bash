@@ -14,6 +14,8 @@ function all_vars_set(){
     java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/models"
     ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/templateEngine"
 
+    spring_framework_interface_files_directory="$java_files_src_directory/repositories"
+    
     framework_support_files_directory="$driver_script_directory/framework_support"
     framework_boilerplate_files="$framework_support_files_directory/y_boilerplate"
     support_scripts_dir="$framework_support_files_directory/bash_scripts"
@@ -233,8 +235,6 @@ function parse_config_lines_in_file_into_java_class_build_variables(){
 
 function generate_files_from_java_class_configs(){
     
-    #driver_config_entities=()
-    
     # Create files from each config file.
     for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
         
@@ -245,9 +245,13 @@ function generate_files_from_java_class_configs(){
         source $support_scripts_dir/generate_basic_java_file_from_vars.bash
         create_java_file
 
-        # Create Java Model Files.
+        # Create Java Model Files. Used in Previous version of script...
         #source $support_scripts_dir/generate_java_model_files_from_vars.bash
         #create_java_model_files
+        
+        # Create Spring Framework repository Interface Files.
+        source $support_scripts_dir/generate_spring_framework_interface_file_from_vars.bash
+        spring_framework_interface_file
         
         # Create FreeMarker templet Create Form for entitity.
         source $support_scripts_dir/generate_ftl_create_entity_form.bash
@@ -305,7 +309,7 @@ function generate_java_driver_file(){
 
 function generate_main_ftl_file(){
     source $support_scripts_dir/generate_ftl_main_file.bash
-    ftl_files_output_directory_and_main_ftl_file_name="$ftl_file_output_directory/main.ftl"
+    ftl_files_output_directory_and_main_ftl_file_name="$ftl_file_output_directory/aMain.ftl"
     
     #display_vars_for_generate_main_ftl_file
     add_header_to_main_ftl_file
