@@ -22,40 +22,37 @@ function add_header_to_java_main_file(){
 mkdir -p $java_driver_files_location
 
 cat  << EOT > $java_driver_files_location_and_name
-package drivers;
+// TODO : REMOVE UN-NEEDED IMPORTS! 
+// TODO : Finish Commenting the imports.
 
-import templateEngine.FreeMarkerEngine;
-import java.io.IOException;
+// Imports for spring framework.
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.CommandLineRunner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+// Imports for spark framework.
+
 import static spark.Spark.*;
 import spark.ModelAndView;
+import templateEngine.FreeMarkerEngine;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
+import java.io.IOException;
 
-
-import models.*;
 import entities.*;
 import controls.*;
 
-public class MainClass {
-    
-    public static void main(String[] args) {
-        staticFileLocation("/public");
-        MainClass s = new MainClass();
-        
-        port(8080); // Spark will run on port 8080
-        
-        s.init();
-    }
-    
-    /**
-     *  Function for Routes
-     */
-    private void init() {
+@SpringBootApplication
+public class Application implements CommandLineRunner{
 
 EOT
 }
@@ -74,6 +71,11 @@ function set_vars_for_entity_to_add(){
     insert_var_6=$(printf "%ssId" $entity_var)
     insert_var_7=$(printf "%ss" $entity_var_lower_case)
     insert_var_8=$(printf "%sForm" $entity_var)
+    insert_var_9=$(printf "%sRepository" $entity_var)
+    insert_var_10=$(printf "%sRepository" $entity_var_lower_case)
+    insert_var_11=$(printf "%sNumber" $entity_var)
+    insert_var_12=$(printf "%sBy%s" $entity_var $insert_var_11)
+    insert_var_13=$(printf "%sIdsList" $entity_var)
 
     for ((attribute_array_index=0;attribute_array_index<${#java_class_attribute_array[@]};attribute_array_index++)); do
         create_attribute_array_split
@@ -114,6 +116,11 @@ function display_vars_for_entity_to_add(){
     printf "insert_var_6 = %s\n" $insert_var_6
     printf "insert_var_7 = %s\n" $insert_var_7
     printf "insert_var_8 = %s\n" $insert_var_8
+    printf "insert_var_9 = %s\n" $insert_var_9
+    printf "insert_var_10 = %s\n" $insert_var_10
+    printf "insert_var_11 = %s\n" $insert_var_11
+    printf "insert_var_12 = %s\n" $insert_var_12
+    printf "insert_var_13 = %s\n" $insert_var_13
     printf "\n"
     
 }
@@ -125,25 +132,82 @@ function add_model_decleration(){
     set_vars_for_entity_to_add    
     #display_vars_for_entity_to_add
     cat  << EOT >> $java_driver_files_location_and_name
-    	$insert_var_3 $insert_var_2 = new $insert_var_3();
+	@Autowired
+	private $insert_var_9 $insert_var_10;
 EOT
 }
 
 function add_mongo_db_controller_decleration(){
 
     cat  << EOT >> $java_driver_files_location_and_name
-    	ChocoMongoController mongoController = new ChocoMongoController("ChocoMongoDB");
+
+    	private ChocoMongoController mongoController = new ChocoMongoController("ChocoMongoDB");
 EOT
+}
+
+function add_main_method(){
+cat  << EOT >> $java_driver_files_location_and_name
+
+	public static void main(String[] args) {
+
+        // For Testing and Debug.
+        boolean dBug = true;
+        if (dBug) System.out.println("\nDEBUG ON IN : Application.main\n");
+
+		SpringApplication.run(Application.class, args);
+
+		if (dBug) System.out.println("\n\n\n\nSPRING SERVER RUNNING!\n");
+		if (dBug) System.out.println("\nSPARK SERVER RUNNING!\n\n\n\n");
+	}
+EOT
+}
+
+function add_run_method(){
+cat  << EOT >> $java_driver_files_location_and_name
+
+	@Override
+	public void run(String... args) throws Exception {
+        // This allow non static method to be called from static main while
+        // allowing same method to access 'autowired' repositories.
+
+        // For Testing and Debug.
+        boolean dBug = false;
+        if (dBug) System.out.println("\nDEBUG ON IN : Application.run\n");
+
+        startSparkServer();
+	}
+EOT
+
+}
+
+function add_begining_to_Server_start_method(){
+cat  << EOT >> $java_driver_files_location_and_name
+
+    private void startSparkServer() {
+
+        // For Testing and Debug.
+        boolean dBug = false;
+        if (dBug) System.out.println("\nDEBUG ON IN : Application.startSparkServer\n");
+
+        // Set vars for Spark Server.
+        staticFileLocation("/public");
+        port(8080); // Spark Server will run on port 8080
+
+
+        // Functions for Spark Server Routes
+EOT
+
 }
 
 function add_root_route(){
 cat  << EOT >> $java_driver_files_location_and_name
 
+        // Landing/Home Page Route.
         get("/", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
            viewObjects.put("title", "Welcome to Spark Project");
-           viewObjects.put("templateName", "home.ftl");
-           return new ModelAndView(viewObjects, "main.ftl");
+           viewObjects.put("templateName", "aHome.ftl");
+           return new ModelAndView(viewObjects, "aMain.ftl");
         }, new FreeMarkerEngine());
 
 EOT
@@ -161,27 +225,36 @@ function add_get_and_post_to_java_main_file(){
         get("/create$insert_var_1", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
            viewObjects.put("templateName", "create$insert_var_8.ftl");
-           return new ModelAndView(viewObjects, "main.ftl");
+           return new ModelAndView(viewObjects, "aMain.ftl");
         }, new FreeMarkerEngine());
         
         post("/create$insert_var_1", (request, response) -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 $insert_var_1 u = mapper.readValue(request.body(), $insert_var_1.class);
-                if (!u.isValid()) {
+                
+                if (!u.isValid(u)) {
                     response.status(400);
                     return "Correct the fields";
                 }
-                if($insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
+                
+                if($insert_var_10.countBy$insert_var_11(u.get$insert_var_11()) == 0) {
+                    
+                    int id = 1;
+
+                    if (dBug) System.out.println("request.body() = " + request.body());
+                    if (dBug) System.out.println("u = " + convertObjectToJSON(u));
+                    
+                    $insert_var_10.save(u);
                     response.status(200);
                     response.type("application/json");
-                    mongoController.add_new_record(u);
-                    return 1;
+                    return id;
                 }
                 else {
                     response.status(400);
                     response.type("application/json");
-                    return "$insert_var_1 Already Exists";
+                    
+                    return "$insert_var_1 ID Number Already Exists!!";
                 }
                 } catch (JsonParseException jpe) {
                     response.status(404);
@@ -193,27 +266,38 @@ function add_get_and_post_to_java_main_file(){
             response.status(200);
             Map<String, Object> viewObjects = new HashMap<String, Object>();
             viewObjects.put("templateName", "show$insert_var_1.ftl");
-            return new ModelAndView(viewObjects, "main.ftl");
+            return new ModelAndView(viewObjects, "aMain.ftl");
         }, new FreeMarkerEngine());
 
         get("/getJson$insert_var_5", (request, response) -> {
             response.status(200);
-            return mongoController.getCollectionListJSON("$insert_var_1");
+            return mongoController.getJSONListOfObjectsFromRepo($insert_var_10);
         });
 
         get("/remove$insert_var_1", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
            viewObjects.put("templateName", "remove$insert_var_8.ftl");
-           viewObjects.put("$insert_var_7", mongoController.getListOfCollectionsIDs("$insert_var_1"));
-           return new ModelAndView(viewObjects, "main.ftl");
+           viewObjects.put("$insert_var_7", mongoController.getJSONListOfIdsFromRepo($insert_var_10));
+           return new ModelAndView(viewObjects, "aMain.ftl");
         }, new FreeMarkerEngine());
 
         put("/remove$insert_var_1/:id", (request, response) -> {
             String id = request.params(":id");
-            Map<String, Object> viewObjects = new HashMap<String, Object>();
-            if(mongoController.removeFromCollectionDocumentByID("$insert_var_1", id)) return "$insert_var_1 Removed";
-            else return "No Such $insert_var_1 Found";
             
+            long numRemoved = $insert_var_10.delete$insert_var_12(id);
+            
+            if (numRemoved == 1){
+                response.status(200);
+                return "One $insert_var_1 Removed.";
+            } else if (numRemoved > 1){
+                response.status(200);
+                String returnString = "" + numRemoved + " $insert_var_4 REMOVED!!";
+                return returnString;
+            }
+            else {
+                response.status(400);
+                return "No Such $insert_var_1 Found.";
+            }
         });
         
         get("/update$insert_var_1", (request, response) -> {
@@ -227,23 +311,31 @@ function add_get_and_post_to_java_main_file(){
             
             try {
                 $insert_var_1 u = mapper.readValue(request.body(), $insert_var_1.class);
+                
                 if (!u.isValid()) {
                     response.status(400);
-                    return "Correct the fields";
+                    return "Correct The Fields.";
                 }
-                if(!$insert_var_2.check$insert_var_1(u.get$index_param_upper_case())) {
+                if($insert_var_10.countBy$insert_var_11(u.get$insert_var_11()) == 1) {
+                    $insert_var_10.delete$insert_var_12(u.get$insert_var_11());
+                    $insert_var_10.save(u);
                     response.status(200);
                     response.type("application/json");
                     return 1;
-                }
-                else {
+                } else {
                     response.status(404);
-                    return "$insert_var_1 Does Not Exists";
+                    return "$insert_var_1 Does Not Exists or More Than One Exists.";
                 }
-                } catch (JsonParseException jpe) {
-                    response.status(404);
-                    return "Exception";
-                }
+            } catch (JsonParseException jpe) {
+                response.status(404);
+                return "Exception";
+            }
+        });
+
+        // Useful for testing and debuging.
+        get("/getJson$insert_var_13", (request, response) -> {
+            response.status(200);
+            return mongoController.getJSONListOfIdsFromRepo($insert_var_10);
         });
         
 EOT
@@ -253,11 +345,7 @@ function add_footer_to_java_main_file(){
     cat  << EOT >> $java_driver_files_location_and_name
     }
     
-    /**
-     *  This function converts an Object to JSON String
-     * @param obj
-     */
-    private static String toJSON(Object obj) {
+    private String convertObjectToJSON(Object obj) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);

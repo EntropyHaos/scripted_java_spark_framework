@@ -9,7 +9,7 @@ function all_vars_set(){
     java_files_src_directory="$scripted_framework_output_root_directory/main/java"
 
     java_driver_files_location="$java_files_src_directory/drivers"
-    java_driver_files_location_and_name="$java_driver_files_location/MainClass.java"
+    java_driver_files_location_and_name="$java_driver_files_location/Application.java"
 
     java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/models"
     ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/templateEngine"
@@ -246,8 +246,8 @@ function generate_files_from_java_class_configs(){
         create_java_file
 
         # Create Java Model Files.
-        source $support_scripts_dir/generate_java_model_files_from_vars.bash
-        create_java_model_files
+        #source $support_scripts_dir/generate_java_model_files_from_vars.bash
+        #create_java_model_files
         
         # Create FreeMarker templet Create Form for entitity.
         source $support_scripts_dir/generate_ftl_create_entity_form.bash
@@ -265,8 +265,6 @@ function generate_files_from_java_class_configs(){
         source $support_scripts_dir/generate_ftl_remove_form.bash
         create_remove_ftl_file
     done
-    #ftl_files_output_directory_and_main_ftl_file_name
-    #generate_driver_file
     generate_java_driver_file
     generate_main_ftl_file
 }
@@ -290,7 +288,9 @@ function generate_java_driver_file(){
     done
     
     add_mongo_db_controller_decleration
-    
+    add_main_method
+    add_run_method
+    add_begining_to_Server_start_method
     add_root_route
     
     for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
@@ -301,9 +301,6 @@ function generate_java_driver_file(){
     done
     
     add_footer_to_java_main_file
-: << 'EOP'
-    add_footer_to_java_main_file
-EOP
 }
 
 function generate_main_ftl_file(){
