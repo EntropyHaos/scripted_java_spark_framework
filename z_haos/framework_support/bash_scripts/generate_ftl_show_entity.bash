@@ -37,7 +37,7 @@ cat << EOT > $ftl_files_output_directory_and_file_name
  			\$.getJSON('/getJson$entity_list_suffix_for_json_call',function(json){
     			if ( json.length == 0 ) {
         			console.log("NO DATA!");
-        			\$(".$entity_to_generate_remove_form_for_table_name").text("No Users Found");
+        			\$(".$entity_to_generate_remove_form_for_table_name").text("No $entity_to_generate_remove_form_for_plural Found");
     			}
     			else {
     				var tbl = new awesomeTableJs({

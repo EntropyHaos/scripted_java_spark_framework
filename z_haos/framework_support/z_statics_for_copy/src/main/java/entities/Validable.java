@@ -10,6 +10,10 @@ public class Validable {
 
     private boolean validationIsDisable = true;
 
+    public boolean isValid(Object objectIn){
+        return true;
+    }
+/*
     public boolean isValid(Provider provider){
 
         if (validationIsDisable) return true;
@@ -35,7 +39,6 @@ public class Validable {
         }
         return true;
     }
-/*
 
     public boolean isValid(User user){
         

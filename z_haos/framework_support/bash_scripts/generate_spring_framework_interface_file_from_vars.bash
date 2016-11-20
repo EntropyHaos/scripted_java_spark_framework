@@ -15,16 +15,15 @@ function generate_spring_interface_file(){
     interface_name=$(printf "%sRepository" $java_class_name)
     
     local interface_index_var
-    interface_index_var=$(printf "%sNumber" $lower_case_java_class_name)
+    interface_index_var=$(printf "entity%sIdNumber" $lower_case_java_class_name)
     
     local interface_index_var_upper_case
-    interface_index_var_upper_case=$(printf "%sNumber" $java_class_name)
+    interface_index_var_upper_case=$(printf "Entity%sIdNumber" $java_class_name)
     
     local delete_string=$(printf "%sBy%s" $java_class_name $interface_index_var_upper_case)
     
     cat  << EOT > $spring_framework_interface_file_directory_and_name_one
-    
-package repositories;
+package drivers;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
