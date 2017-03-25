@@ -54,13 +54,4 @@ function echo_action() {
     fi
 }
 
-function delete_this_script() {
-    directory_script_is_run_from="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    script_name=`basename "$0"`
-    cd $directory_script_is_run_from
-    rm $script_name
-}
-
 init
-
-# delete_this_script
