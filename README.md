@@ -1,10 +1,19 @@
-Version 0.02
+<h1>Spark Spring Java MongoDB CRUD Bash</h1>
 
-*Hopes to create something similiar to this [tutorial](https://github.com/prashantban/Java-Spark-FTL).*
+**Version 1.0**
 
 # WAT!?
 
-Bash scripts to generate boilerplate for Java Spark Framework.
+A set of Bash scripts to generate boilerplate for a Java CRUD WebApp.
+
+### Tech Utilized
+
+* [Cloud9 Virtual IDE](https://c9.io/)
+* [Java Spark Framework](http://sparkjava.com/)
+* [Spring Framework](https://spring.io/)
+* [MongoDB](https://www.mongodb.com/)
+* [Maven Build Tools](https://maven.apache.org/)
+* [GitFlow](https://github.com/nvie/gitflow)
 
 # HOW!?
 
@@ -17,16 +26,16 @@ Bash scripts to generate boilerplate for Java Spark Framework.
 
 # WHY!?
 
-Was put together in my freetime while working on CCS440 assignment.
+I needed a tool to quickly throw together a prototype for a class project that i knew would change as we realized new business requirements.
 
 # WEN!?
 
-Fall 2016
+Created in the Fall of 2016. Cleaned up for public consumption in March of 2017.
 
 # WER!?
 
-On Cloud9.
+On Cloud9 while attending Carroll University.
 
 # WHO!?
 
-Benjamin Haos
+Benjamin Haos built this after figuring out [this](https://github.com/prashantban/Java-Spark-FTL).
