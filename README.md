@@ -8,7 +8,12 @@ Bash scripts to generate boilerplate for Java Spark Framework.
 
 # HOW!?
 
-* clone `
+* `git clone git@github.com:EntropyHaos/scripted_java_spark_framework.git tester`
+* `bash tester/z_haos/setup_c9_vm_for_java_spark.bash `
+* `bash mongodb_run.bash `
+* `bash tester/z_haos/bash_spark_framework_haos.bash`
+* `cd a_build/`
+* `mvn spring-boot:run`
 
 # WHY!?
 

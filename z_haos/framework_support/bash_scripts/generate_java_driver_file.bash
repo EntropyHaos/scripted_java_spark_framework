@@ -160,8 +160,7 @@ cat  << EOT >> $java_driver_files_location_and_name
 
 		SpringApplication.run(Application.class, args);
 
-		if (dBug) System.out.println("\n\n\n\nSPRING SERVER RUNNING!\n");
-		if (dBug) System.out.println("\nSPARK SERVER RUNNING!\n\n\n\n");
+		if (dBug) display_spark_startup_text();
 	}
 EOT
 }
@@ -362,6 +361,33 @@ function add_footer_to_java_main_file(){
         }
         return null;
     }
+
+    private static void display_spark_startup_text(){
+    
+    // Sauce : http://patorjk.com/software/taag/#p=display&f=Fire%20Font-s&t=Spark
+    //       : http://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_GREEN = "\u001B[32m";
+        String ANSI_RED = "\u001B[31m";
+        String ANSI_YELLOW = "\u001B[33m";
+        
+        
+        System.out.println("");
+        System.out.println(ANSI_YELLOW + " (");
+        System.out.println(" )\\ )                  )  ");
+        System.out.println("(()/(         ) (   ( /(  " + ANSI_RESET);
+        System.out.println(ANSI_RED + " /("+ANSI_YELLOW+"_"+ANSI_RED+")`  )  ( /( )(  )\\()) ");
+        System.out.println("("+ANSI_RESET+"___"+ANSI_RED+")) /(/(  )("+ANSI_YELLOW+"_"+ANSI_RED+")(()\\(("+ANSI_YELLOW+"_"+ANSI_RED+")\\  " + ANSI_RESET);
+        System.out.println("/ __|_"+ANSI_RED+"("+ANSI_RESET+"_"+ANSI_RED+")"+ANSI_RESET+"  _"+ANSI_RED+"(("+ANSI_RESET+"_"+ANSI_RED+")"+ANSI_RESET+"_"+ANSI_RED+"("+ANSI_RESET+"_"+ANSI_YELLOW+"|"+ANSI_RESET+"_"+ANSI_YELLOW+"|"+ANSI_RED+"("+ANSI_RESET+"_"+ANSI_RED+") "+ANSI_RESET);
+        System.out.println("\\__ | '_ \\/ _` | '_| / / ");
+        System.out.println("|___| .__/\\__,_|_| |_\\_\\ ");
+        System.out.println("    |_|");
+        System.out.println("");
+        System.out.println(ANSI_GREEN + "ChocAn Spark Server Started!" + ANSI_RESET);
+        System.out.println("");
+        
+    }
+    
 }
 
 EOT
