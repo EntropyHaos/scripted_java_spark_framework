@@ -276,7 +276,7 @@ copy_static_files
 copy_files_needing_abstraction
 spark_framework_haos_bash
 generate_maven_pom_file
-diff_test_entire_build_verbose
+#diff_test_entire_build_verbose
 #diff_test_entire_build_not_verbose
 delete_created_boilerplate_with_prompt
 
