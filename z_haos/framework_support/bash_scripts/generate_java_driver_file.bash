@@ -345,7 +345,7 @@ EOT
 }
 
 function add_footer_to_java_main_file(){
-    cat  << EOT >> $java_driver_files_location_and_name
+    cat  << 'EOT' >> $java_driver_files_location_and_name
     }
     
     private String convertObjectToJSON(Object obj) {
