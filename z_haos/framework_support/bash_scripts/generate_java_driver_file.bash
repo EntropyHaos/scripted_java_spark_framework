@@ -223,7 +223,7 @@ function add_get_and_post_to_java_main_file(){
     entity_var=$java_class_name
     
     set_vars_for_entity_to_add    
-    display_vars_for_entity_to_add
+    #display_vars_for_entity_to_add
     
     cat  << EOT >> $java_driver_files_location_and_name
         get("/create$insert_var_1", (request, response) -> {
