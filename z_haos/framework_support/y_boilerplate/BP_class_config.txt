@@ -1,0 +1,5 @@
+package
+className
+atribute_1 attributeType attributeName "Attribute Human Readable Title" "Attribute Human Readable Explanation for Insert"
+atribute_n attributeType attributeName "Attribute Human Readable Title" "Attribute Human Readable Explanation for Insert"
+Class Config Author Name
