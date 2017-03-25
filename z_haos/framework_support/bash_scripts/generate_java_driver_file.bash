@@ -145,7 +145,7 @@ function add_mongo_db_controller_decleration(){
 
     cat  << EOT >> $java_driver_files_location_and_name
 
-    	private ChocoMongoController mongoController = new ChocoMongoController();
+    	private HaosBuilderMongoController mongoController = new HaosBuilderMongoController();
 EOT
 }
 
