@@ -6,7 +6,7 @@
 - this will be highlighted in red
 ```
 
-<a><img src="https://cdn.rawgit.com/EntropyHaos/scripted_java_spark_framework/master/docs/assets/readme_file_title.svg"/></a>
+<a><img src="https://rawgit.com/EntropyHaos/scripted_java_spark_framework/master/docs/assets/readme_file_title.svg"/></a>
 
 
 **Version 1.0**
