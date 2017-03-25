@@ -1,10 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" 
-     xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     width="300" height="75"
->
-  <text font-size="50" x="10" y="90">
-    <tspan fill="green">Spark Spring Java MongoDB Maven Bash!</tspan>
-  </text>
+<svg width="931" height="173" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <defs>
+  <filter id="svg_1_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="#a7ed61" id="canvas_background" height="175" width="933" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <text font-weight="bold" filter="url(#svg_1_blur)" stroke="#000" transform="rotate(-5 465.0121459960939,78.93205261230463) matrix(1.8735983401196559,0,0,3.848484754562378,-169.8595759968436,-518.5151354074479) " xml:space="preserve" text-anchor="start" font-family="Euphoria, sans-serif" font-size="24" id="svg_1" y="163.5" x="93.5" stroke-width="0" fill="#000000">Spark Spring Java MongoDB Maven Bash!</text>
+ </g>
 </svg>
