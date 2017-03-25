@@ -96,10 +96,12 @@ function delete_this_script() {
     RDIR="$( dirname "$SOURCE" )"
     DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-    script_path_and_name="$DIR/$SOURCE"
+    #script_path_and_name="$DIR/$SOURCE"
     
     #echo "$script_path_and_name"
-    rm -f $script_path_and_name
+    cd $DIR
+    ls
+    rm -f $SOURCE
 }
 # run_silent_install_of_framework
 
