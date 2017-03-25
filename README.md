@@ -1,13 +1,11 @@
 <h1 style="color: green;">Spark Spring Java MongoDB CRUD Bash</h1>
 
+<a><img src="https://rawgit.com/EntropyHaos/scripted_java_spark_framework/master/docs/assets/readme_file_title.svg"/></a>
 
 ```diff
 + this will be highlighted in green
 - this will be highlighted in red
 ```
-
-<a><img src="https://rawgit.com/EntropyHaos/scripted_java_spark_framework/master/docs/assets/readme_file_title.svg"/></a>
-
 
 **Version 1.0**
 
