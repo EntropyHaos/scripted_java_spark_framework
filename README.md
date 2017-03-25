@@ -1,4 +1,4 @@
-<h1 style="color:green;">Spark Spring Java MongoDB CRUD Bash</h1>
+<h1 style="color: green;">Spark Spring Java MongoDB CRUD Bash</h1>
 
 **Version 1.0**
 
