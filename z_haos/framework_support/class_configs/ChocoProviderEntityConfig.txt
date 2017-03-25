@@ -1,0 +1,12 @@
+entities
+Provider
+private String entityProviderIdNumber "Provider entity ID number" "Enter ID number for new Provider entity."
+private String providerName "Name" "Enter name of provider."
+private String providerStreetAddress "Street Address" "Enter street address for provider."
+private String providerCity "City" "Enter City for provider."
+private String providerState "STATE" "Enter State for provider."
+private long providerZip "ZIP CODE" "Enter zip code for provider."
+private boolean isDietitian "Provider is a Dietitian" "True/False"
+private boolean isExerciseExpert "Provider is an Exercise Expert" "True/False"
+private boolean isInternist "Provider is an Internist" "True/False"
+Benjamin Haos

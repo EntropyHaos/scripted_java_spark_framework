@@ -1,14 +1,10 @@
-import Model.UserModel;
-import User.User;
+//import models.UserModel;
+//import entities.User;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.*;
 
-/**
- *
- * @author prash_000
- */
 public class CreateUserTest {
     
     public CreateUserTest() {
@@ -42,5 +38,6 @@ public class CreateUserTest {
         expect(userTestmodel.createUser("T13", "Test","","Test",20,'M',"1234567891",12 
         )).andReturn(1);
     }
+     */
 
 }

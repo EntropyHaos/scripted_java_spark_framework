@@ -1,4 +1,3 @@
-
 function all_vars_set(){
     driver_script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     
@@ -9,12 +8,14 @@ function all_vars_set(){
     
     java_files_src_directory="$scripted_framework_output_root_directory/main/java"
 
-    java_driver_files_location="$java_files_src_directory/Driver"
-    java_driver_files_location_and_name="$java_driver_files_location/MainClass.java"
+    java_driver_files_location="$java_files_src_directory/drivers"
+    java_driver_files_location_and_name="$java_driver_files_location/Application.java"
 
-    java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/Model"
-    ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/TemplateEngine"
+    java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/models"
+    ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/templateEngine"
 
+    spring_framework_interface_files_directory="$java_files_src_directory/repositories"
+    
     framework_support_files_directory="$driver_script_directory/framework_support"
     framework_boilerplate_files="$framework_support_files_directory/y_boilerplate"
     support_scripts_dir="$framework_support_files_directory/bash_scripts"
@@ -92,7 +93,6 @@ function display_java_class_config_variables(){
     printf "Class Creator : %s\n" "$java_class_creator"
 }
 
-
 function create_jave_class_config_array_from_file(){
     java_class_config_file=$1
     readarray class_configs_lines < $java_class_config_file
@@ -135,7 +135,7 @@ function delete_existing(){
 }
 
 function delete_created_boilerplate_with_prompt(){
-    read -p "Delete Creation?(y/n) " -n 1 -r
+    read -p "Delete Creation? (y/n) " -n 1 -r
     echo    # move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
@@ -205,11 +205,6 @@ function generate_maven_pom_file(){
     create_pom_file
 }
 
-function generate_driver_file(){
-    source $support_scripts_dir/generate_java_driver_file.bash
-    create_java_file
-}
-
 function parse_config_lines_in_file_into_java_class_build_variables(){
 
     start_index_for_class_attributes_array_offset=2
@@ -222,7 +217,7 @@ function parse_config_lines_in_file_into_java_class_build_variables(){
     java_class_name_lower_case=$(printf "%s" ${class_configs_lines[1]})
     java_class_name_lower_case="$(tr '[:upper:]' '[:lower:]' <<< ${java_class_name_lower_case:0:1})${java_class_name_lower_case:1}"
     
-    driver_config_entities+=($java_class_name)
+    #driver_config_entities+=($java_class_name)
     
     java_class_file_name=$(printf "%s.java" $java_class_name)
     
@@ -240,8 +235,6 @@ function parse_config_lines_in_file_into_java_class_build_variables(){
 
 function generate_files_from_java_class_configs(){
     
-    driver_config_entities=()
-    
     # Create files from each config file.
     for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
         
@@ -252,16 +245,87 @@ function generate_files_from_java_class_configs(){
         source $support_scripts_dir/generate_basic_java_file_from_vars.bash
         create_java_file
 
-        # Create Java Model Files.
-        source $support_scripts_dir/generate_java_model_files_from_vars.bash
-        create_java_model_files
+        # Create Java Model Files. Used in Previous version of script...
+        #source $support_scripts_dir/generate_java_model_files_from_vars.bash
+        #create_java_model_files
         
-        # Create FreeMarker templet for Create Form.
-        source $support_scripts_dir/generate_create_form_ftl_file_from_vars.bash
-        create_create_ftl_file
+        # Create Spring Framework repository Interface Files.
+        source $support_scripts_dir/generate_spring_framework_interface_file_from_vars.bash
+        spring_framework_interface_file
+        
+        # Create FreeMarker templet Create Form for entitity.
+        source $support_scripts_dir/generate_ftl_create_entity_form.bash
+        create_create_entity_ftl_file
+        
+        # Create FreeMarker templet Create Entity Form for entitity.
+        source $support_scripts_dir/generate_ftl_show_entity.bash
+        create_show_entity_ftl_file
+        
+        # Create FreeMarker templet Update Entity Form for entitity.
+        source $support_scripts_dir/generate_ftl_update_entity_form.bash
+        create_update_entity_ftl_file
+        
+        # Create FreeMarker templet Remove Entity Form for entitity.
+        source $support_scripts_dir/generate_ftl_remove_form.bash
+        create_remove_ftl_file
+    done
+    generate_java_driver_file
+    generate_main_ftl_file
+}
+
+function generate_driver_file(){
+    source $support_scripts_dir/generate_java_driver_file.bash
+    create_java_file
+}
+
+function generate_java_driver_file(){
+    source $support_scripts_dir/generate_java_driver_file.bash
+    
+    add_header_to_java_main_file
+    
+
+    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
+        
+        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
+        parse_config_lines_in_file_into_java_class_build_variables
+        add_model_decleration
     done
     
-    generate_driver_file
+    add_mongo_db_controller_decleration
+    add_main_method
+    add_run_method
+    add_begining_to_Server_start_method
+    add_root_route
+    
+    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
+        
+        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
+        parse_config_lines_in_file_into_java_class_build_variables
+        add_get_and_post_to_java_main_file
+    done
+    
+    add_footer_to_java_main_file
+}
+
+function generate_main_ftl_file(){
+    source $support_scripts_dir/generate_ftl_main_file.bash
+    ftl_files_output_directory_and_main_ftl_file_name="$ftl_file_output_directory/aMain.ftl"
+    
+    #display_vars_for_generate_main_ftl_file
+    add_header_to_main_ftl_file
+    
+
+    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
+        
+        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
+        parse_config_lines_in_file_into_java_class_build_variables
+        add_entity_manage_menu_to_main_ftl_file
+    done
+    
+    add_footer_to_main_ftl_file
+    : << 'EOF'
+EOF
+    
 }
 
 function spark_framework_haos_bash(){
@@ -278,6 +342,19 @@ spark_framework_haos_bash
 generate_maven_pom_file
 #diff_test_entire_build_verbose
 #diff_test_entire_build_not_verbose
+
+function prompt_for_clean_and_install(){
+    read -p "Perform Maven Clean and Install? (y/n) " -n 1 -r
+    echo    # move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        #rm -rf $scripts_build_dir
+        cd $scripts_build_dir
+        mvn clean install
+        cd $GOPATH
+    fi    
+}
+# prompt_for_clean_and_install
 delete_created_boilerplate_with_prompt
 
 : << 'EOP' # EOP is a 'pause' used for dev. and testing. Should be removed.

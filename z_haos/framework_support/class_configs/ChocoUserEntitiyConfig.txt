@@ -1,0 +1,10 @@
+entities
+User
+private String entityUserIdNumber "User entity ID number" "Enter ID number for new User entity."
+private String memberName "Name" "Enter name of member."
+private String memberStreetAddress "Street Address" "Enter street address for member."
+private String memberCity "City" "Enter City for member."
+private String memberState "STATE" "Enter State for member."
+private long memberZip "ZIP CODE" "Enter zip code for member."
+private DateTime memberValidThrough "Valid Through" "Enter last day member is paid through."
+Benjamin Haos

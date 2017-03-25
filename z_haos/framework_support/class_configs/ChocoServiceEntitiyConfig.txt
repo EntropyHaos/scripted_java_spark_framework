@@ -1,0 +1,8 @@
+entities
+Service
+private String entityServiceIdNumber "Service entity ID number" "Enter ID number for new Service entity."
+private String providableServiceDescription "Service Descriptor" "Enter description for providable service."
+private boolean isProvidableByDietitian "Providable by Dietitian" "True/False"
+private boolean isProvidableByExerciseExpert "Providable by Exercise Expert" "True/False"
+private boolean isProvidableByInternist "Providable by Internist" "True/False"
+Benjamin Haos
