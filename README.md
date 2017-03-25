@@ -1,5 +1,12 @@
 <h1 style="color: green;">Spark Spring Java MongoDB CRUD Bash</h1>
 
+
+```diff
++ this will be highlighted in green
+- this will be highlighted in red
+```
+
+
 **Version 1.0**
 
 # WAT!?
