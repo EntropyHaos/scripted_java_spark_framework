@@ -4,6 +4,7 @@
 
 function init() {
     get_confirmation;
+    setup_configs_for_no_prompt_java_sdk_install;
     setup_cloud9_vm_for_spark_framework;
 }
 
@@ -33,6 +34,11 @@ function setup_cloud9_vm_for_spark_framework() {
     sudo apt-get install oracle-java8-set-default -y
     echo_action "Installing Maven" true
     sudo apt-get install maven -y
+}
+
+function setup_configs_for_no_prompt_java_sdk_install(){
+    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
 }
 
 function create_line_across_terminal() {
