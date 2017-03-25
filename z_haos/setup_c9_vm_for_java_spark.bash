@@ -1,208 +1,82 @@
-scripts_build_dir="$GOPATH/a_build"
-scripts_built_for_diff_compare="$GOPATH/x_diffs"
-scripted_framework_output_root_directory="$scripts_build_dir/src"
+# TODO : Make it record times and other stuff(s)?
 
-java_files_src_directory="$scripted_framework_output_root_directory/main/java"
-
-java_class_model_files_directory="$scripted_framework_output_root_directory/main/java/Model"
-
-ftl_file_output_directory="$scripted_framework_output_root_directory/main/resources/TemplateEngine"
-
-driver_script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-framework_support_files_directory="$driver_script_directory/framework_support"
-support_scripts_dir="$framework_support_files_directory/bash_scripts"
-class_configs_dir="$framework_support_files_directory/class_configs"
-
-function display_basic_script_info(){
-    echo "Support scripts directory : $support_scripts_dir"
-    echo "Class configs directory : $support_configs_dir"
-    
+function init()
+{
+    echo_action "Setup Configs for Silent Java Install" true
+    setup_configs_for_silent_java_sdk_install
+    echo_action "Setup Spark Framework on Cloud9" true
+    setup_cloud9_vm_for_spark_framework
 }
 
-function display_java_class_config_file_lines(){
-    
-    for config_line in "${class_configs_lines[@]}"
-    do
-        printf "%s" "$config_line"
-    done
+function setup_configs_for_silent_java_sdk_install(){
+    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
 }
 
-function display_java_class_config_variables(){
-    
-    printf "Class Name : %s\n" $java_class_name
-    
-    for ((java_class_array_variable_index=0;java_class_array_variable_index<${#java_class_attribute_array[@]};java_class_array_variable_index++)); do
-        echo ${java_class_attribute_array[java_class_array_variable_index]}
-    done
-    
-    printf "Class Creator : %s\n" "$java_class_creator"
+function setup_cloud9_vm_for_spark_framework()
+{
+    echo_action "Adding external APT repository." true
+    sudo add-apt-repository ppa:webupd8team/java -y
+    echo_action "Downloading package lists from the repositories and updating them." true
+    sudo apt-get update
+    echo_action "Installing Java Installer." true
+    sudo apt-get install oracle-java8-installer -y
+    echo_action "Setting default Java to Java8" true
+    sudo apt-get install oracle-java8-set-default -y
+    echo_action "Installing Maven" true
+    sudo apt-get install maven -y
+    : << 'EOP'
+EOP
 }
 
-function create_attribute_array_split(){
-        declare -a 'attribute_array_split=('"${java_class_attribute_array[attribute_array_index]}"')'
-        
-        atribute_protection_var=${attribute_array_split[0]}
-        atribute_type=${attribute_array_split[1]}
-        atribute_name=${attribute_array_split[2]}
-        
-        atribute_name_upper_case="${attribute_array_split[2]}"
-        atribute_name_upper_case="$(tr '[:lower:]' '[:upper:]' <<< ${atribute_name_upper_case:0:1})${atribute_name_upper_case:1}"
-
-        atribute_text_for_label="${attribute_array_split[3]}"
-        atribute_text_for_placeholder="${attribute_array_split[4]}"
+function create_line_across_terminal()
+{
+    echo
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    echo
 }
 
-function parse_config_lines_in_file_into_java_class_build_variables(){
-
-    start_index_for_class_attributes_array_offset=2
-    start_index_for_class_attributes=$start_index_for_class_attributes_array_offset
-    end_index_for_class_attributes=$((${#class_configs_lines[@]}-1))
-    
-    java_package_for_class=$(printf "%s" ${class_configs_lines[0]})
-    
-    java_class_name=$(printf "%s" ${class_configs_lines[1]})
-    java_class_name_lower_case=$(printf "%s" ${class_configs_lines[1]})
-    java_class_name_lower_case="$(tr '[:upper:]' '[:lower:]' <<< ${java_class_name_lower_case:0:1})${java_class_name_lower_case:1}"
-    
-    
-    java_class_file_name=$(printf "%s.java" $java_class_name)
-    
-    java_files_output_directory_name=$java_files_src_directory/$java_package_for_class
-    java_files_output_directory_and_file_name=$java_files_output_directory_name/$java_class_file_name
-    
-    java_class_attribute_array=()
-    for ((java_class_attribute_index=$((start_index_for_class_attributes)); java_class_attribute_index<$(($end_index_for_class_attributes));java_class_attribute_index++)); do
-        
-        java_class_attribute_array[$((java_class_attribute_index-start_index_for_class_attributes_array_offset))]=${class_configs_lines[java_class_attribute_index]}
-    done
-    
-    java_class_generator_name=${class_configs_lines[end_index_for_class_attributes]}
-    
-    : << 'EOF'
-    
-    for ((class_configs_lines_array=0; class_configs_lines_array<${#class_configs_lines[@]}; class_configs_lines_array++)); do
-        printf "%s" "${class_configs_lines[class_configs_lines_array]}"
-        #create_jave_class_config_array_from_file ${config_files_arr[i]}
-        #display_java_class_config_file_lines
-        #parse_config_lines_in_file_into_java_class_build_array
-    done    
-EOF
-}
-
-function create_jave_class_config_array_from_file(){
-    java_class_config_file=$1
-    readarray class_configs_lines < $java_class_config_file
-}
-
-function create_files_from_java_class_configs(){
-    
-    # Create array of config files.
-    config_files_arr=($class_configs_dir/*)
-
-    # Create files from each config file.
-    for ((config_file_array_index=0; config_file_array_index<${#config_files_arr[@]}; config_file_array_index++)); do
-        
-        create_jave_class_config_array_from_file ${config_files_arr[config_file_array_index]}
-        parse_config_lines_in_file_into_java_class_build_variables
-
-        # Create basic Java File.
-        source $support_scripts_dir/generate_basic_java_file_from_vars.bash
-        create_java_file
-
-        # Create Java Model Files.
-        source $support_scripts_dir/generate_java_model_files_from_vars.bash
-        create_java_model_files
-        
-        # Create FreeMarker templet for Create Form.
-        source $support_scripts_dir/generate_create_form_ftl_file_from_vars.bash
-        create_create_ftl_file
-    done    
-}
-
-function spark_framework_haos_bash(){
-    
-    create_files_from_java_class_configs;
-}
-
-function delete_existing(){
-    rm -rf $scripts_build_dir
-}
-
-function diff_test_entire_build_verbose(){
-    diff_test_results=$(diff -r $scripts_build_dir/ $scripts_built_for_diff_compare/)
-    printf "\nDIFF TEST RESULTS!\n\n"
-    if [ "$diff_test_results" != "" ] 
+function echo_action()
+{
+    if [ "$2" = true ]
     then
-        printf "%s" "$diff_test_results"
-        echo "The directory was modified"
-    printf "\n---- END of RESULTS ----\n\n"
+        create_line_across_terminal
+        echo "$1"
+        create_line_across_terminal
     else
-        printf "%s\n" "None"
-        printf "\n---- END of RESULTS ----\n\n"
-        #delete_created_boilerplate_with_prompt
-        
+        echo ""
+        echo "$1"
+        echo ""
     fi
 }
 
-function diff_test_entire_build_not_verbose(){
-    diff_test_results=$(diff -r --brief $scripts_build_dir/ $scripts_built_for_diff_compare/)
-    printf "\nDIFF TEST RESULTS!\n\n"
-    if [ "$diff_test_results" != "" ] 
-    then
-        printf "%s" "$diff_test_results"
-        echo "The directory was modified"
-    printf "\n---- END of RESULTS ----\n\n"
-    else
-        printf "%s\n" "None"
-        printf "\n---- END of RESULTS ----\n\n"
-    fi
+function run_test()
+{
+    echo "test completed."
 }
 
-function diff_test_model_verbose(){
-    diff_test_results=$(diff -r $scripts_build_dir/src/main/java/Model $scripts_built_for_diff_compare/src/main/java/Model)
-    printf "\nDIFF TEST RESULTS!\n\n"
-    if [ "$diff_test_results" != "" ] 
-    then
-        printf "%s" "$diff_test_results"
-        echo "The directory was modified"
-    printf "\n---- END of RESULTS ----\n\n"
-    else
-        printf "%s\n" "None"
-        printf "\n---- END of RESULTS ----\n\n"
-        
-    fi
+function run_silent_install_of_framework(){
+    # It's so easy...
+    log_dir="log_haos"
+    # Move to C9 project root.
+    cd $GOPATH
+    # Go one directory up.
+    cd ..
+    # Make the logfile directory if it is not there.
+    mkdir -p $log_dir
+    # Drop down into it.
+    cd $log_dir
+    # Set the name for the log file.
+    log_file="spark_framework_install.txt"
+    # Run the setup script and append write to log file.
+    
+    # This runs the setup with no output to console logging to file.
+    #init >> "$log_file" 2>&1
+    # This works for logging and viewing install at the same time.
+    init | tee -a "$log_file"
+    
+    # Go back to the project's root directory.
+    cd $GOPATH
 }
 
-function delete_created_boilerplate_with_prompt(){
-    read -p "Delete Creation?(y/n) " -n 1 -r
-    echo    # move to a new line
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        rm -rf $scripts_build_dir
-    fi    
-}
-
-function copy_static_files(){
-    dir_to_copy_from="$framework_support_files_directory/z_statics_for_copy"
-    dir_to_copy_to="$scripts_build_dir"
-    cp -R $dir_to_copy_from/. $dir_to_copy_to/
-}
-
-function copy_files_needing_abstraction(){
-    dir_to_copy_from="$framework_support_files_directory/z_copy_but_need_abstraction"
-    dir_to_copy_to="$scripts_build_dir"
-    cp -R $dir_to_copy_from/. $dir_to_copy_to/
-}
-
-
-delete_existing
-copy_static_files
-copy_files_needing_abstraction
-spark_framework_haos_bash
-:<<'EOF'
-diff_test_entire_build_verbose
-EOF
-delete_created_boilerplate_with_prompt
-
-#diff_test_entire_build_not_verbose
-#diff_test_model_verbose
+run_silent_install_of_framework
