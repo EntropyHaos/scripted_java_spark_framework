@@ -1,4 +1,3 @@
-//import models.UserModel;
 import java.util.Collections;
 import org.junit.Test;
 import org.easymock.EasyMock;
@@ -9,6 +8,7 @@ public class HtmlTest {
     public HtmlTest() {
     }
 
+    // ToDo : Abstract this!
     /**
      *
      * @author prash_000

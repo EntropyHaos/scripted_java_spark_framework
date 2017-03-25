@@ -11,7 +11,9 @@ public class CreateUserTest {
     }
     
     //@Test
-    // ToDo : Add validation for phone number so this test can be run.
+    // ToDo : Abstract this test!
+/*
+
     public void aUserIsNotValid() {
         User usr = new User();
         usr.setId("T12");
@@ -38,6 +40,5 @@ public class CreateUserTest {
         expect(userTestmodel.createUser("T13", "Test","","Test",20,'M',"1234567891",12 
         )).andReturn(1);
     }
-     */
-
+*/
 }

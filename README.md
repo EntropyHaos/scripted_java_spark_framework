@@ -8,7 +8,7 @@ Bash scripts to generate boilerplate for Java Spark Framework.
 
 # HOW!?
 
-Run the ```bash_spark_framework_haos.bash``` script in the project folder.
+* clone `
 
 # WHY!?
 

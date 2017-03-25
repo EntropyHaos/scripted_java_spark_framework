@@ -70,7 +70,6 @@ EOT
 }
 
 function install_maven_cloud_9_vm(){
-    echo_action "Installing Maven" true
     sudo apt-get update
     sudo apt-get remove maven2 -y
     sudo apt-get install maven -y

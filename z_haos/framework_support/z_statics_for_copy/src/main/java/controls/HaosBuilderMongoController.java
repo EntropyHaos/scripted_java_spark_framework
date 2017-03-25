@@ -10,17 +10,17 @@ import java.io.StringWriter;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
-public class ChocoMongoController {
+public class HaosBuilderMongoController {
     
     // Basic Constructor
-    public ChocoMongoController() {
+    public HaosBuilderMongoController() {
     }
 
     public String getJSONListOfIdsFromRepo(MongoRepository repoToGetIdsFrom){
         
         // For Testing and Debug.
         boolean dBug = false;
-        if (dBug) System.out.println("\nDEBUG ON IN : ChocoMongoController.getJSONListOfIdsFromRepo\n");
+        if (dBug) System.out.println("\nDEBUG ON IN : HaosBuilderMongoController.getJSONListOfIdsFromRepo\n");
         
         String returnString = "[";
         
@@ -47,7 +47,7 @@ public class ChocoMongoController {
 
         // For Testing and Debug.
         boolean dBug = false;
-        if (dBug) System.out.println("\nDEBUG ON IN : ChocoMongoController.getJSONListOfObjectsFromRepo\n");
+        if (dBug) System.out.println("\nDEBUG ON IN : HaosBuilderMongoController.getJSONListOfObjectsFromRepo\n");
         
         String returnString = "[";
         
