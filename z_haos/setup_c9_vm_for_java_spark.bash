@@ -79,4 +79,28 @@ function run_silent_install_of_framework(){
     cd $GOPATH
 }
 
-run_silent_install_of_framework
+function delete_this_script() {
+    # Built off : http://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
+    SOURCE="${BASH_SOURCE[0]}"
+    while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+      TARGET="$(readlink "$SOURCE")"
+      if [[ $TARGET == /* ]]; then
+        echo "SOURCE '$SOURCE' is an absolute symlink to '$TARGET'"
+        SOURCE="$TARGET"
+      else
+        DIR="$( dirname "$SOURCE" )"
+        echo "SOURCE '$SOURCE' is a relative symlink to '$TARGET' (relative to '$DIR')"
+        SOURCE="$DIR/$TARGET" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+      fi
+    done
+    RDIR="$( dirname "$SOURCE" )"
+    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+    script_path_and_name="$DIR/$SOURCE"
+    
+    #echo "$script_path_and_name"
+    rm -f $script_path_and_name
+}
+# run_silent_install_of_framework
+
+delete_this_script;
