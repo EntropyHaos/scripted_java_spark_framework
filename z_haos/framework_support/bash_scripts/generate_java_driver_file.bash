@@ -208,7 +208,7 @@ cat  << EOT >> $java_driver_files_location_and_name
         // Landing/Home Page Route.
         get("/", (request, response) -> {
            Map<String, Object> viewObjects = new HashMap<String, Object>();
-           viewObjects.put("title", "Welcome to Team Five's Final Project!");
+           viewObjects.put("title", "Welcome to a Script Generated Java CRUD Application!");
            viewObjects.put("templateName", "aHome.ftl");
            return new ModelAndView(viewObjects, "aMain.ftl");
         }, new FreeMarkerEngine());
@@ -383,7 +383,7 @@ function add_footer_to_java_main_file(){
         System.out.println("|___| .__/\\__,_|_| |_\\_\\ ");
         System.out.println("    |_|");
         System.out.println("");
-        System.out.println(ANSI_GREEN + "ChocAn Spark Server Started!" + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "Spark Server Started!" + ANSI_RESET);
         System.out.println("");
         
     }
