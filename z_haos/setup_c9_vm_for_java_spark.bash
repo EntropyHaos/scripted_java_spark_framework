@@ -5,6 +5,7 @@
 function init() {
     get_confirmation;
     setup_configs_for_no_prompt_java_sdk_install;
+    
     setup_cloud9_vm_for_spark_framework;
 }
 
@@ -33,6 +34,45 @@ function setup_cloud9_vm_for_spark_framework() {
     echo_action "Setting default Java to Java8" true
     sudo apt-get install oracle-java8-set-default -y
     echo_action "Installing Maven" true
+    install_maven_cloud_9_vm
+    echo_action "Installing MongoDB" true
+    setup_mongo_db_for_c9
+}
+
+function setup_mongo_db_for_c9(){
+    sudo apt-get update
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+    
+    echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+    sudo apt-get update
+    sudo apt-get install -y mongodb-org
+    local mongo_db_data_directory="$GOPATH/data"
+    local mongo_run_script_name="mongodb_run.bash"
+    mkdir -p $mongo_db_data_directory
+    
+    create_mongo_db_startupscript
+    
+    cd $GOPATH
+}
+
+function create_mongo_db_startupscript(){
+    cat << EOT > $mongo_run_script_name
+
+mkdir -p $GOPATH/data/log/
+clear
+printf "\nStarting MongoDB!!\n\n"
+mongod --bind_ip=$IP --dbpath=data --nojournal --fork --logpath=$GOPATH/data/log/mongodb.log
+
+printf "\n\nUse VM kill process to stop until something better gets figured out...\n"
+
+EOT
+
+}
+
+function install_maven_cloud_9_vm(){
+    echo_action "Installing Maven" true
+    sudo apt-get update
+    sudo apt-get remove maven2 -y
     sudo apt-get install maven -y
 }
 
