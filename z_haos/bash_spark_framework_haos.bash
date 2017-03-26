@@ -1,8 +1,6 @@
 function all_vars_set(){
     driver_script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    
-    scripts_built_for_diff_compare="$driver_script_directory/../x_diffs"
-    
+
     scripts_build_dir="$GOPATH/a_build"
     scripted_framework_output_root_directory="$scripts_build_dir/src"
     
@@ -47,9 +45,9 @@ function TODO(){
     : << 'EOTODO'
     
     TODO : Rename functions into predictable format.
-            * display is for console display and used mostly for testing.
-            * create should be limited to internal operations.
-            * generate should be for file creation.
+            * 'display' word in function is for console display and used mostly for testing.
+            * 'create' word in function should be limited to script internal operations.
+            * 'generate' word in function should be for file creation.
     
     TODO : Organize the vars to be more maintainable.
     
@@ -141,51 +139,6 @@ function delete_created_boilerplate_with_prompt(){
     then
         rm -rf $scripts_build_dir
     fi    
-}
-
-function diff_test_entire_build_verbose(){
-    diff_test_results=$(diff -r $scripts_build_dir/ $scripts_built_for_diff_compare/)
-    printf "\nDIFF TEST RESULTS!\n\n"
-    if [ "$diff_test_results" != "" ] 
-    then
-        printf "%s\n" "$diff_test_results"
-        echo "The directory was modified"
-    printf "\n---- END of RESULTS ----\n\n"
-    else
-        printf "%s\n" "None"
-        printf "\n---- END of RESULTS ----\n\n"
-        #delete_created_boilerplate_with_prompt
-        
-    fi
-}
-
-function diff_test_entire_build_not_verbose(){
-    diff_test_results=$(diff -r --brief $scripts_build_dir/ $scripts_built_for_diff_compare/)
-    printf "\nDIFF TEST RESULTS!\n\n"
-    if [ "$diff_test_results" != "" ] 
-    then
-        printf "%s" "$diff_test_results"
-        echo "The directory was modified"
-    printf "\n---- END of RESULTS ----\n\n"
-    else
-        printf "%s\n" "None"
-        printf "\n---- END of RESULTS ----\n\n"
-    fi
-}
-
-function diff_test_model_verbose(){
-    diff_test_results=$(diff -r $scripts_build_dir/src/main/java/Model $scripts_built_for_diff_compare/src/main/java/Model)
-    printf "\nDIFF TEST RESULTS!\n\n"
-    if [ "$diff_test_results" != "" ] 
-    then
-        printf "%s" "$diff_test_results"
-        echo "The directory was modified"
-    printf "\n---- END of RESULTS ----\n\n"
-    else
-        printf "%s\n" "None"
-        printf "\n---- END of RESULTS ----\n\n"
-        
-    fi
 }
 
 function copy_static_files(){
@@ -333,6 +286,9 @@ function spark_framework_haos_bash(){
     generate_files_from_java_class_configs;
 }
 
+# Accepts switch '--no_delete'
+user_switch="$1"
+
 all_vars_set
 delete_existing
 copy_static_files
@@ -340,37 +296,8 @@ copy_static_files
 copy_files_needing_abstraction
 spark_framework_haos_bash
 generate_maven_pom_file
-#diff_test_entire_build_verbose
-#diff_test_entire_build_not_verbose
 
-function prompt_for_clean_and_install(){
-    read -p "Perform Maven Clean and Install? (y/n) " -n 1 -r
-    echo    # move to a new line
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        #rm -rf $scripts_build_dir
-        cd $scripts_build_dir
-        mvn clean install
-        cd $GOPATH
-    fi    
-}
-# prompt_for_clean_and_install
-delete_created_boilerplate_with_prompt
-
-: << 'EOP' # EOP is a 'pause' used for dev. and testing. Should be removed.
-EOP
-
-: << 'ENDofTESTINGcommands' # These are commented out but useful for the tool.
-all_vars_set
-
-function test_generate_java_file_boilerplate(){
-    source $framework_boilerplate_files/BP_generate_java_file.bash
-    create_java_file
-}
-test_generate_java_file_boilerplate
-
-
-ENDofTESTINGcommands
-
-#diff_test_entire_build_not_verbose
-#diff_test_model_verbose
+if [ "$user_switch" != "--no_delete" ]
+then
+    delete_created_boilerplate_with_prompt
+fi

@@ -1,11 +1,12 @@
 # This a simple script used to setup a Cloud9 VM.
 
-# ToDo add function to delete script after its been run.
-
 function init() {
-    get_confirmation;
+    if [ "$user_switch" != "--no_prompt" ]
+    then
+        get_confirmation;
+    fi
+
     setup_configs_for_no_prompt_java_sdk_install;
-    
     setup_cloud9_vm_for_spark_framework;
 }
 
@@ -98,5 +99,8 @@ function echo_action() {
         echo ""
     fi
 }
+
+# Accepts switch '--no_prompt'
+user_switch="$1"
 
 init

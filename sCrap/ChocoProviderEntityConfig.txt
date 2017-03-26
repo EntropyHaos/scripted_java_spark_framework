@@ -1,9 +1,0 @@
-entities
-ChocoProvider
-private String providerNumber "Provider ID Number" "Enter ID number for provider."
-private String providerName "Name" "Enter name of provider."
-private String providerStreetAddress "Street Address" "Enter street address for provider."
-private String providerCity "City" "Enter City for provider."
-private String providerState "STATE" "Enter State for provider."
-private long providerZip "ZIP CODE" "Enter zip code for provider."
-Benjamin Haos
